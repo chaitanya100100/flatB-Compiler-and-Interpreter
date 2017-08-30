@@ -60,7 +60,7 @@ expression:    expression '+' expression
           |    expression '/' expression
           |    '-' expression
           |    '(' expression ')'
-          |    IDENTIFIER
+          |    variable
           |    NUMBER
 ;
 
