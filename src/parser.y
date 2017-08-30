@@ -6,14 +6,15 @@
   void yyerror (char const *s);
 %}
 
-%token DECLBLOCK
-%token CODEBLOCK
+%token DECLBLOCK CODEBLOCK
 %token INT
 %token NUMBER
 %token IDENTIFIER
 %token ETOK
-%left '+'
-%left '*'
+
+%left '+' '-'
+%left '*' '/'
+%left '~'
 
 
 %%
@@ -38,6 +39,7 @@ variable_list:    variable_list ',' variable
 ;
 
 variable:    IDENTIFIER
+        |    IDENTIFIER '[' NUMBER ']'
 ;
 
 code_block:    CODEBLOCK '{'  '}'                  { printf("code_block in parser\n"); }
@@ -48,10 +50,19 @@ statement_list:    statement_list statement
               |    statement
 ;
 
-statement:    NUMBER ';'
+statement:    expression ';'
          |    ';'
 ;
 
+expression:    expression '+' expression
+          |    expression '-' expression
+          |    expression '*' expression
+          |    expression '/' expression
+          |    '-' expression
+          |    '(' expression ')'
+          |    IDENTIFIER
+          |    NUMBER
+;
 
 %%
 
@@ -76,5 +87,6 @@ int main(int argc, char *argv[])
 
 	yyin = fopen(argv[1], "r");
 
-	yyparse();
+	int return_val = yyparse();
+    printf("\nRETURN VALUE : %d\n", return_val);
 }
