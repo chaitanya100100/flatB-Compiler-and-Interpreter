@@ -19,31 +19,38 @@
 %%
 
 
-program:	decl_block code_block  { printf("program in parser\n"); }
+program:    decl_block code_block  { printf("program in parser\n"); }
 
-decl_block:     DECLBLOCK '{' '}'                   { printf("decl_block in parser\n"); }
-          |     DECLBLOCK '{' declaration_list '}'  { printf("decl_block in parser\n"); }
+decl_block:    DECLBLOCK '{' '}'                   { printf("decl_block in parser\n"); }
+          |    DECLBLOCK '{' declaration_list '}'  { printf("decl_block in parser\n"); }
 ;
 
-declaration_list:   declaration_list declaration
-                |   declaration
+declaration_list:    declaration_list declaration_statement
+                |    declaration_statement
 ;
 
-declaration:    INT IDENTIFIER ';'
-           |    ';'
+declaration_statement:    INT variable_list';'
+                     |    ';'
 ;
 
-code_block:     CODEBLOCK '{'  '}'                  { printf("code_block in parser\n"); }
-          |     CODEBLOCK '{' statement_list '}'    { printf("code_block in parser\n"); }
+variable_list:    variable_list ',' variable
+             |    variable
 ;
 
-statement_list:     statement_list statement
-              |     statement
+variable:    IDENTIFIER
 ;
 
-statement:      NUMBER ';'
-         |      ';'
+code_block:    CODEBLOCK '{'  '}'                  { printf("code_block in parser\n"); }
+          |    CODEBLOCK '{' statement_list '}'    { printf("code_block in parser\n"); }
+;
 
+statement_list:    statement_list statement
+              |    statement
+;
+
+statement:    NUMBER ';'
+         |    ';'
+;
 
 
 %%

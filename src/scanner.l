@@ -29,6 +29,7 @@
 "}"		return '}';
 ";"		return ';';
 ","		return ',';
+"="		return '=';
 
 [ \t\n]					{ /* Do nothing */ }
 .						{
