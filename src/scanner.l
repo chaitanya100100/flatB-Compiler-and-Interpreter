@@ -3,6 +3,7 @@
 %}
 
 %%
+
 "declblock"				{
 							printf("declblock from scanner\n");
 							return DECLBLOCK;
@@ -11,6 +12,7 @@
 							printf("codeblock from scanner\n");
 							return CODEBLOCK;
 						}
+"int"					return INT;
 [0-9][0-9]*				{
 							printf("Token type: Number, Lexeme/Token Value: %s\n", yytext);
 							return NUMBER;
@@ -26,6 +28,7 @@
 "{"		return '{';
 "}"		return '}';
 ";"		return ';';
+","		return ',';
 
 [ \t\n]					{ /* Do nothing */ }
 .						{

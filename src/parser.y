@@ -29,7 +29,7 @@ declaration_list:   declaration_list declaration
                 |   declaration
 ;
 
-declaration:    NUMBER ';'
+declaration:    INT IDENTIFIER ';'
            |    ';'
 ;
 
@@ -43,11 +43,16 @@ statement_list:     statement_list statement
 
 statement:      NUMBER ';'
          |      ';'
+
+
+
 %%
 
 void yyerror (char const *s)
 {
-       fprintf (stderr, "%s\n", s);
+        fprintf (stderr, "----------------ERROR----------------\n");
+        fprintf (stderr, "%s\n", s);
+        fprintf (stderr, "----------------ERROR----------------\n");
 }
 
 int main(int argc, char *argv[])
