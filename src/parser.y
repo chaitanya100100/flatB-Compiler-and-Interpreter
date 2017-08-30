@@ -6,30 +6,43 @@
   void yyerror (char const *s);
 %}
 
-%token declaration_list
-%token statement_list
+%token DECLBLOCK
+%token CODEBLOCK
+%token INT
 %token NUMBER
 %token IDENTIFIER
 %token ETOK
 %left '+'
 %left '*'
 
+
 %%
 
-program:	decl_block code_block
 
-decl_block:  '{' declaration_list '}'
+program:	decl_block code_block  { printf("program in parser\n"); }
 
-code_block:  '{' statement_list '}'
+decl_block:     DECLBLOCK '{' '}'                   { printf("decl_block in parser\n"); }
+          |     DECLBLOCK '{' declaration_list '}'  { printf("decl_block in parser\n"); }
+;
 
-/*
-expr	: 	expr '+' expr 
-	|	expr '*' expr 
-	| 	NUMBER
-	|	IDENTIFIER
-	;
-*/
+declaration_list:   declaration_list declaration
+                |   declaration
+;
 
+declaration:    NUMBER ';'
+           |    ';'
+;
+
+code_block:     CODEBLOCK '{'  '}'                  { printf("code_block in parser\n"); }
+          |     CODEBLOCK '{' statement_list '}'    { printf("code_block in parser\n"); }
+;
+
+statement_list:     statement_list statement
+              |     statement
+;
+
+statement:      NUMBER ';'
+         |      ';'
 %%
 
 void yyerror (char const *s)
