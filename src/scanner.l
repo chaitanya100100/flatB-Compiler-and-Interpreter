@@ -16,6 +16,7 @@
 
 "int"					return INT;
 "for"					return FOR;
+"while"					return WHILE;
 
 [0-9][0-9]*				{
 							printf("Token type: Number, Lexeme/Token Value: %s\n", yytext);
@@ -41,6 +42,14 @@
 "]"		return ']';
 "("		return '(';
 ")"		return ')';
+
+"<"		return LESS;
+">"		return GREATER;
+"<="	return LESS_OR_EQUAL;
+">="	return GREATER_OR_EQUAL;
+"=="	return EQUAL;
+"!="	return NOT_EQUAL;
+
 
 [ \t\n]					{ /* Do nothing */ }
 .						{

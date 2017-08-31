@@ -6,18 +6,29 @@
   void yyerror (char const *s);
 %}
 
-%token DECLBLOCK CODEBLOCK
-%token INT
-%token FOR
-%token NUMBER
-%token IDENTIFIER
+
 %token ETOK
 
 %right '='
+
+%left EQUAL
+%left NOT_EQUAL
+
+%left LESS
+%left LESS_OR_EQUAL
+%left GREATER
+%left GREATER_OR_EQUAL
+
 %left '+' '-'
 %left '*' '/'
 %right UMINUS
 
+%token IDENTIFIER
+%token NUMBER
+%token WHILE
+%token FOR
+%token INT
+%token DECLBLOCK CODEBLOCK
 
 %%
 
@@ -59,10 +70,12 @@ statement:    expression ';'
          |    FOR IDENTIFIER '=' NUMBER ',' NUMBER '{' statement_list '}'
          |    FOR IDENTIFIER '=' NUMBER ',' NUMBER ',' NUMBER '{' '}'
          |    FOR IDENTIFIER '=' NUMBER ',' NUMBER ',' NUMBER '{' statement_list '}'
+         |    WHILE condition '{' '}'
+         |    WHILE condition '{' statement_list '}'
          |    ';'
 ;
 
-expression:    variable '=' expression
+expression:    variable '=' expression          { printf("assignment of expression\n"); }
           |    expression '+' expression
           |    expression '-' expression        { printf("subtraction of expression\n"); }
           |    expression '*' expression
@@ -73,7 +86,22 @@ expression:    variable '=' expression
           |    NUMBER
 ;
 
+
+condition:    expression relational_operator expression
+;
+
+relational_operator:    LESS
+                   |    GREATER
+                   |    LESS_OR_EQUAL
+                   |    GREATER_OR_EQUAL
+                   |    EQUAL
+                   |    NOT_EQUAL {printf("not equal\n");}
+;
+
+
 %%
+
+
 
 void yyerror (char const *s)
 {
