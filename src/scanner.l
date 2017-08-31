@@ -15,6 +15,7 @@
 						}
 
 "int"					return INT;
+"for"					return FOR;
 
 [0-9][0-9]*				{
 							printf("Token type: Number, Lexeme/Token Value: %s\n", yytext);

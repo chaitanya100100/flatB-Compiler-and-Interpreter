@@ -8,13 +8,15 @@
 
 %token DECLBLOCK CODEBLOCK
 %token INT
+%token FOR
 %token NUMBER
 %token IDENTIFIER
 %token ETOK
 
+%right '='
 %left '+' '-'
 %left '*' '/'
-%left '~'
+%right UMINUS
 
 
 %%
@@ -42,6 +44,8 @@ variable:    IDENTIFIER
         |    IDENTIFIER '[' NUMBER ']'
 ;
 
+
+
 code_block:    CODEBLOCK '{'  '}'                  { printf("code_block in parser\n"); }
           |    CODEBLOCK '{' statement_list '}'    { printf("code_block in parser\n"); }
 ;
@@ -51,16 +55,21 @@ statement_list:    statement_list statement
 ;
 
 statement:    expression ';'
+         |    FOR IDENTIFIER '=' NUMBER ',' NUMBER '{' '}'
+         |    FOR IDENTIFIER '=' NUMBER ',' NUMBER '{' statement_list '}'
+         |    FOR IDENTIFIER '=' NUMBER ',' NUMBER ',' NUMBER '{' '}'
+         |    FOR IDENTIFIER '=' NUMBER ',' NUMBER ',' NUMBER '{' statement_list '}'
          |    ';'
 ;
 
-expression:    expression '+' expression
-          |    expression '-' expression
+expression:    variable '=' expression
+          |    expression '+' expression
+          |    expression '-' expression        { printf("subtraction of expression\n"); }
           |    expression '*' expression
-          |    expression '/' expression
-          |    '-' expression
+          |    expression '/' expression        { printf("divide of expression\n"); }
+          |    '-' expression    %prec UMINUS   { printf("unary minus in expression\n"); }
           |    '(' expression ')'
-          |    variable
+          |    variable                         { printf("variable in expression\n"); }
           |    NUMBER
 ;
 
