@@ -1,11 +1,12 @@
 declblock{
 	int data[100];
 	int i, sum;
+	int n;
 }
 
 codeblock{
 	i = 0 ;
-
+	read n;
 L1:	data[i] = i ;
 	i = i + 1 ;
 	goto L1 if i < 100 ;

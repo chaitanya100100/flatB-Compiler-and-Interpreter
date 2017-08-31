@@ -18,7 +18,10 @@
 "for"					return FOR;
 "while"					return WHILE;
 "if"					return IF;
+"else"					return ELSE;
 "goto"					return GOTO;
+"print"					return PRINT;
+"read"					return READ;
 
 
 "+"		return '+';
@@ -56,6 +59,11 @@
 							printf("Token type: Identifier, Lexeme/Token Value: %s\n", yytext);
 							return IDENTIFIER;
 		     			}
+
+\"(\.|[^\"])*\"			{
+							printf("Token type: string, Lexeme/Token Value: %s\n", yytext);
+							return STRING;
+						}
 
 
 [ \t\n]					{ /* Do nothing */ }

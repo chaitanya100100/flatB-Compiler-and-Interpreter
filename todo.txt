@@ -3,6 +3,8 @@
 - find some solution to accept empty block e.g. empty loop block or codeblock or declblock
 - enum for relational operator
 - assignment operator needs to be declared outside expression
-
+- check for proper if else pairing
+- check for special characters in string literal
+- modulo operator
 
 - multiple unary minuses are not giving error e.g.  ----x  [solved]  It's a valid syntax

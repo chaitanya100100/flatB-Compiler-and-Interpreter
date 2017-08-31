@@ -23,11 +23,15 @@
 %left '*' '/'
 %right UMINUS
 
+%token STRING
 %token IDENTIFIER
 %token NUMBER
+%token READ
+%token PRINT
 %token GOTO
 %token WHILE
 %token FOR
+%token ELSE
 %token IF
 %token INT
 %token DECLBLOCK CODEBLOCK
@@ -69,6 +73,7 @@ statement_list:    statement_list statement
 
 statement:    expression ';'
          |    IDENTIFIER ':'
+         |    IF condition '{' statement_list '}' optional_else
          |    FOR IDENTIFIER '=' NUMBER ',' NUMBER '{' '}'
          |    FOR IDENTIFIER '=' NUMBER ',' NUMBER '{' statement_list '}'
          |    FOR IDENTIFIER '=' NUMBER ',' NUMBER ',' NUMBER '{' '}'
@@ -77,8 +82,13 @@ statement:    expression ';'
          |    WHILE condition '{' statement_list '}'
          /*No need for dual goto rule*/
          |    GOTO IDENTIFIER optional_goto_condition ';'
+         |    READ variable_list ';'
+         |    PRINT print_block ';'
          |    ';'
 ;
+
+optional_else:    /*empty*/
+             |    ELSE '{' statement_list '}'
 
 optional_goto_condition :    /*empty*/
                         |    IF condition
@@ -107,6 +117,12 @@ relational_operator:    LESS
                    |    NOT_EQUAL {printf("not equal\n");}
 ;
 
+print_block:    print_block ',' print_atom
+           |    print_atom
+;
+
+print_atom:    STRING
+          |    expression
 
 %%
 
