@@ -1,4 +1,4 @@
-- allow array variables at places like for loop iterator, array indexes, etc
+- allow array variables at places like for loop iterator, array indexes, etc. Merge number and variable together as value containing atom.
 - see where a NUMBER can be replaced by variable
 - find some solution to accept empty block e.g. empty loop block or codeblock or declblock
 - enum for relational operator

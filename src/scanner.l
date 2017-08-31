@@ -17,16 +17,10 @@
 "int"					return INT;
 "for"					return FOR;
 "while"					return WHILE;
+"if"					return IF;
+"goto"					return GOTO;
 
-[0-9][0-9]*				{
-							printf("Token type: Number, Lexeme/Token Value: %s\n", yytext);
-							return NUMBER;
-                		}
 
-[a-zA-Z][a-zA-Z0-9]* 	{
-							printf("Token type: Identifier, Lexeme/Token Value: %s\n", yytext);
-							return IDENTIFIER;
-		     			}
 "+"		return '+';
 "-"		return '-';
 "*"		return '*';
@@ -34,6 +28,8 @@
 
 ";"		return ';';
 ","		return ',';
+
+":"		return ':';
 
 "{"		return '{';
 "}"		return '}';
@@ -49,6 +45,17 @@
 ">="	return GREATER_OR_EQUAL;
 "=="	return EQUAL;
 "!="	return NOT_EQUAL;
+
+
+[0-9][0-9]*				{
+							printf("Token type: Number, Lexeme/Token Value: %s\n", yytext);
+							return NUMBER;
+                		}
+
+[a-zA-Z][a-zA-Z0-9]* 	{
+							printf("Token type: Identifier, Lexeme/Token Value: %s\n", yytext);
+							return IDENTIFIER;
+		     			}
 
 
 [ \t\n]					{ /* Do nothing */ }

@@ -25,8 +25,10 @@
 
 %token IDENTIFIER
 %token NUMBER
+%token GOTO
 %token WHILE
 %token FOR
+%token IF
 %token INT
 %token DECLBLOCK CODEBLOCK
 
@@ -52,9 +54,9 @@ variable_list:    variable_list ',' variable
 ;
 
 variable:    IDENTIFIER
+        |    IDENTIFIER '[' IDENTIFIER ']'
         |    IDENTIFIER '[' NUMBER ']'
 ;
-
 
 
 code_block:    CODEBLOCK '{'  '}'                  { printf("code_block in parser\n"); }
@@ -66,13 +68,20 @@ statement_list:    statement_list statement
 ;
 
 statement:    expression ';'
+         |    IDENTIFIER ':'
          |    FOR IDENTIFIER '=' NUMBER ',' NUMBER '{' '}'
          |    FOR IDENTIFIER '=' NUMBER ',' NUMBER '{' statement_list '}'
          |    FOR IDENTIFIER '=' NUMBER ',' NUMBER ',' NUMBER '{' '}'
          |    FOR IDENTIFIER '=' NUMBER ',' NUMBER ',' NUMBER '{' statement_list '}'
          |    WHILE condition '{' '}'
          |    WHILE condition '{' statement_list '}'
+         /*No need for dual goto rule*/
+         |    GOTO IDENTIFIER optional_goto_condition ';'
          |    ';'
+;
+
+optional_goto_condition :    /*empty*/
+                        |    IF condition
 ;
 
 expression:    variable '=' expression          { printf("assignment of expression\n"); }
