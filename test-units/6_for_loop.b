@@ -8,7 +8,7 @@ codeblock{
 
     x = -(a / b) + (c - d) * (k * 6);
 
-    for i = 12, 42, 52 {
+    for i = 12, c, 52 {
         x = l;
         x = df+6*(dfs / 56 + d);
 
@@ -16,7 +16,7 @@ codeblock{
             df = ds + 56;
             df = -x - b;
         }
-        for i = 1, 65 {}
+        for i = 1, a[d[xx[65]]] {}
         for i = 1, 65 {for i = 1, 65 {}}
     }
 }

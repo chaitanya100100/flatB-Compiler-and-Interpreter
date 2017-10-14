@@ -19,7 +19,7 @@ label1:
     goto label3;
 
 label2:
-    print "sum is greater than", n, " !! ";
+    print "sum is greater than", n, " !![alsfsa9487*&%EE*(//)] ";
     goto label5;
 
 label3:

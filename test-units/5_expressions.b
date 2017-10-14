@@ -11,4 +11,5 @@ codeblock{
     ;
     54 * d + i5k[50];
     sdf = df[84] = d = df = a[2] * b[2] / 56 * (c - d[3] * (x) / (-df[20]));
+    sdd = (df * 65 + 55) % (sdf/95*2%M+sf);
 }

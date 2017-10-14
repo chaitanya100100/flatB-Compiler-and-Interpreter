@@ -21,6 +21,7 @@
 
 %left '+' '-'
 %left '*' '/'
+%left '%'
 %right UMINUS
 
 %token STRING
@@ -58,13 +59,20 @@ variable_list:    variable_list ',' variable
 ;
 
 variable:    IDENTIFIER
-        |    IDENTIFIER '[' IDENTIFIER ']'
-        |    IDENTIFIER '[' NUMBER ']'
+        |    IDENTIFIER '[' value_holder ']'
+;
+
+value_holder:    variable
+            |    NUMBER
 ;
 
 
-code_block:    CODEBLOCK '{'  '}'                  { printf("code_block in parser\n"); }
-          |    CODEBLOCK '{' statement_list '}'    { printf("code_block in parser\n"); }
+
+code_block:    CODEBLOCK statement_block
+;
+
+statement_block:    '{' '}'
+               |    '{' statement_list '}'
 ;
 
 statement_list:    statement_list statement
@@ -74,12 +82,9 @@ statement_list:    statement_list statement
 statement:    expression ';'
          |    IDENTIFIER ':'
          |    IF condition '{' statement_list '}' optional_else
-         |    FOR IDENTIFIER '=' NUMBER ',' NUMBER '{' '}'
-         |    FOR IDENTIFIER '=' NUMBER ',' NUMBER '{' statement_list '}'
-         |    FOR IDENTIFIER '=' NUMBER ',' NUMBER ',' NUMBER '{' '}'
-         |    FOR IDENTIFIER '=' NUMBER ',' NUMBER ',' NUMBER '{' statement_list '}'
-         |    WHILE condition '{' '}'
-         |    WHILE condition '{' statement_list '}'
+         |    FOR variable '=' value_holder ',' value_holder statement_block
+         |    FOR variable '=' value_holder ',' value_holder ',' value_holder statement_block
+         |    WHILE condition statement_block
          /*No need for dual goto rule*/
          |    GOTO IDENTIFIER optional_goto_condition ';'
          |    READ variable_list ';'
@@ -88,23 +93,22 @@ statement:    expression ';'
 ;
 
 optional_else:    /*empty*/
-             |    ELSE '{' statement_list '}'
+             |    ELSE statement_block
 
 optional_goto_condition :    /*empty*/
                         |    IF condition
 ;
 
-expression:    variable '=' expression          { printf("assignment of expression\n"); }
+expression:    variable '=' expression
           |    expression '+' expression
-          |    expression '-' expression        { printf("subtraction of expression\n"); }
+          |    expression '-' expression
           |    expression '*' expression
-          |    expression '/' expression        { printf("divide of expression\n"); }
-          |    '-' expression    %prec UMINUS   { printf("unary minus in expression\n"); }
+          |    expression '/' expression
+          |    expression '%' expression
+          |    '-' expression    %prec UMINUS
           |    '(' expression ')'
-          |    variable                         { printf("variable in expression\n"); }
-          |    NUMBER
+          |    value_holder
 ;
-
 
 condition:    expression relational_operator expression
 ;
@@ -114,7 +118,7 @@ relational_operator:    LESS
                    |    LESS_OR_EQUAL
                    |    GREATER_OR_EQUAL
                    |    EQUAL
-                   |    NOT_EQUAL {printf("not equal\n");}
+                   |    NOT_EQUAL
 ;
 
 print_block:    print_block ',' print_atom

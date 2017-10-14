@@ -1,10 +1,9 @@
-- allow array variables at places like for loop iterator, array indexes, etc. Merge number and variable together as value containing atom.
-- see where a NUMBER can be replaced by variable
-- find some solution to accept empty block e.g. empty loop block or codeblock or declblock
+**- allow array variables at places like for loop iterator, array indexes, etc. Merge number and variable together as value containing atom.
+**- see where a NUMBER can be replaced by variable
+**- find some solution to accept empty block e.g. empty loop block or codeblock or declblock
+**- check for special characters in string literal
+**- modulo operator
+**- multiple unary minuses are not giving error e.g.  ----x  [solved]  It's a valid syntax
+*- assignment operator needs to be declared outside expression
 - enum for relational operator
-- assignment operator needs to be declared outside expression
 - check for proper if else pairing
-- check for special characters in string literal
-- modulo operator
-
-- multiple unary minuses are not giving error e.g.  ----x  [solved]  It's a valid syntax
