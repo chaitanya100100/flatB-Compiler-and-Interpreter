@@ -1,0 +1,48 @@
+declblock from scanner
+identifier: i
+identifier: j
+identifier: k
+identifier: key
+integer literal: 100
+identifier: val
+integer literal: 100
+identifier: sum
+codeblock from scanner
+identifier: n
+identifier: i
+integer literal: 1
+integer literal: 100
+identifier: data
+identifier: i
+identifier: val
+identifier: i
+identifier: sum
+integer literal: 0
+identifier: i
+integer literal: 1
+identifier: label1
+identifier: label3
+identifier: label2
+string literal: "sum is greater than"
+identifier: n
+string literal: " !![alsfsa9487*&%EE*(//)] "
+identifier: label5
+identifier: label3
+identifier: i
+identifier: n
+string literal: "Key :"
+identifier: key
+identifier: i
+string literal: "Value :"
+identifier: val
+identifier: i
+identifier: sum
+identifier: sum
+identifier: val
+identifier: i
+identifier: label4
+identifier: label2
+identifier: sum
+identifier: n
+identifier: label5
+string literal: "Exiting..."

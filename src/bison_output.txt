@@ -1,0 +1,10 @@
+Number : 100
+Number : 100
+decl_block in parser
+Number : 1
+Number : 100
+Number : 0
+Number : 1
+program in parser
+
+RETURN VALUE : 0

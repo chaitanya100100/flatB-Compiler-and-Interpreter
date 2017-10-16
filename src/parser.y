@@ -1,11 +1,26 @@
 %{
-  #include <stdio.h>
-  #include <stdlib.h>
-  FILE *yyin;
-  int yylex (void);
-  void yyerror (char const *s);
+
+#include <stdio.h>
+#include <stdlib.h>
+FILE *yyin;
+int yylex (void);
+void yyerror (char const *s);
+
+FILE * flex_output;
+FILE * bison_output;
+
 %}
 
+
+/*
+================ tokens ===================
+*/
+%union{
+    int val;
+    double dval;
+}
+
+%start program
 
 %token ETOK
 
@@ -24,9 +39,9 @@
 %left '%'
 %right UMINUS
 
-%token STRING
+%token STRING_LITERAL
 %token IDENTIFIER
-%token NUMBER
+%token <val> INT_LITERAL
 %token READ
 %token PRINT
 %token GOTO
@@ -40,10 +55,10 @@
 %%
 
 
-program:    decl_block code_block  { printf("program in parser\n"); }
+program:    decl_block code_block  { fprintf(bison_output, "program in parser\n"); }
 
-decl_block:    DECLBLOCK '{' '}'                   { printf("decl_block in parser\n"); }
-          |    DECLBLOCK '{' declaration_list '}'  { printf("decl_block in parser\n"); }
+decl_block:    DECLBLOCK '{' '}'                   { fprintf(bison_output, "decl_block in parser\n"); }
+          |    DECLBLOCK '{' declaration_list '}'  { fprintf(bison_output, "decl_block in parser\n"); }
 ;
 
 declaration_list:    declaration_list declaration_statement
@@ -63,7 +78,7 @@ variable:    IDENTIFIER
 ;
 
 value_holder:    variable
-            |    NUMBER
+            |    INT_LITERAL    {fprintf(bison_output, "Number : %d\n", $1);}
 ;
 
 
@@ -125,7 +140,7 @@ print_block:    print_block ',' print_atom
            |    print_atom
 ;
 
-print_atom:    STRING
+print_atom:    STRING_LITERAL
           |    expression
 
 %%
@@ -151,8 +166,12 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Correct usage: bcc filename\n");
 	}
 
+
+    flex_output = fopen("flex_output.txt", "w");
+    bison_output = fopen("bison_output.txt", "w");
+
 	yyin = fopen(argv[1], "r");
 
 	int return_val = yyparse();
-    printf("\nRETURN VALUE : %d\n", return_val);
+    fprintf(bison_output, "\nRETURN VALUE : %d\n", return_val);
 }
