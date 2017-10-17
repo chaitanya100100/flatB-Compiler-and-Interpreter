@@ -1,37 +1,3 @@
 declblock from scanner
-identifier: data
-integer literal: 100
-identifier: i
-identifier: sum
-identifier: n
 codeblock from scanner
-identifier: i
-integer literal: 0
-identifier: n
-identifier: L1
-identifier: data
-identifier: i
-identifier: i
-identifier: i
-identifier: i
-integer literal: 1
-identifier: L1
-identifier: i
-integer literal: 100
-identifier: sum
-integer literal: 0
-identifier: i
-integer literal: 0
-identifier: L2
-identifier: sum
-identifier: sum
-identifier: data
-identifier: i
-identifier: i
-identifier: i
-integer literal: 1
-identifier: L2
-identifier: i
-integer literal: 100
-string literal: "Sum value: "
-identifier: sum
+identifier: a

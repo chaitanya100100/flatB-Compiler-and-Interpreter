@@ -1,0 +1,10 @@
+declblock{
+
+}
+
+codeblock{
+    {
+        read a;
+    }
+
+}

@@ -97,24 +97,20 @@ statement_list:    statement_list statement
 ;
 
 statement:    expression ';'
+         |    statement_block
          |    IDENTIFIER ':'
-         |    IF condition '{' statement_list '}' optional_else
+         |    IF condition statement_block
+         |    IF condition statement_block ELSE statement_block
          |    FOR variable '=' value_holder ',' value_holder statement_block
          |    FOR variable '=' value_holder ',' value_holder ',' value_holder statement_block
          |    WHILE condition statement_block
-         /*No need for dual goto rule*/
-         |    GOTO IDENTIFIER optional_goto_condition ';'
+         |    GOTO IDENTIFIER ';'
+         |    GOTO IDENTIFIER IF condition ';'
          |    READ variable_list ';'
          |    PRINT print_block ';'
          |    ';'
 ;
 
-optional_else:    /*empty*/
-             |    ELSE statement_block
-
-optional_goto_condition :    /*empty*/
-                        |    IF condition
-;
 
 expression:    variable '=' expression
           |    expression '+' expression
