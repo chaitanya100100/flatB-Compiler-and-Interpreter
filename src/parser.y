@@ -2,7 +2,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-FILE *yyin;
+#include "AST.h"
+
+extern FILE *yyin;
 int yylex (void);
 void yyerror (char const *s);
 
@@ -78,7 +80,7 @@ variable:    IDENTIFIER
 ;
 
 value_holder:    variable
-            |    INT_LITERAL    {fprintf(bison_output, "Number : %d\n", $1);}
+            |    INT_LITERAL
 ;
 
 
