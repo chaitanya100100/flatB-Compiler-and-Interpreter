@@ -1,6 +1,10 @@
 %{
+#include "AST.h"
 #include "parser.tab.h"
+
 extern FILE * flex_output;
+extern union _NODE_ yylval;
+
 %}
 
 
@@ -53,22 +57,26 @@ extern FILE * flex_output;
 ">="    return GREATER_OR_EQUAL;
 "=="    return EQUAL;
 "!="    return NOT_EQUAL;
+"||"    return OR;
+"&&"    return AND;
 
 
 [0-9][0-9]*    {
-                   yylval.val = (double)atoi(yytext);
-                   fprintf(flex_output, "integer literal: %d\n", yylval.val);
+                   yylval.int_val = atoi(yytext);
+                   fprintf(flex_output, "integer literal: %s\n", yytext);
                    return INT_LITERAL;
                }
 
 
 [a-zA-Z][a-zA-Z0-9]*    {
+                            yylval.string_val = strdup(yytext);
                             fprintf(flex_output, "identifier: %s\n", yytext);
                             return IDENTIFIER;
                         }
 
 
 \"(\.|[^\"])*\"    {
+                       yylval.string_val = strdup(yytext);
                        fprintf(flex_output, "string literal: %s\n", yytext);
                        return STRING_LITERAL;
                    }

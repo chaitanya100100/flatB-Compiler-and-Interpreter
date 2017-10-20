@@ -1,3 +1,9 @@
 declblock from scanner
 codeblock from scanner
 identifier: a
+identifier: i
+integer literal: 1
+integer literal: 2
+integer literal: 3
+identifier: j
+integer literal: 3

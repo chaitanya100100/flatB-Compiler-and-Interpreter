@@ -1,4 +1,8 @@
-decl_block in parser
-program in parser
+decl_block
+statement_block
+statement_block empty
+statement_block
+code_block
+program
 
 RETURN VALUE : 0
