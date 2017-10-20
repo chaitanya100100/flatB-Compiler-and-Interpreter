@@ -1,5 +1,6 @@
 declblock{
-    int hour;
+    int hour, jo, ar[65], sdf, df[654];
+    int hour, jo, ar[65], sdf, df[654];
 }
 
 codeblock{

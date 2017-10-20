@@ -1,5 +1,6 @@
 %{
 
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include "AST.h"
@@ -26,9 +27,15 @@ AST_program * main_program;
 %type <program> program
 %type <decl_block> decl_block
 %type <decl_block> decl_statement_list
+
+%type <decl_block> decl_statement
+%type <decl_block> decl_variable_list
+
+/*
 %type <decl_statement> decl_statement
 %type <decl_statement> decl_variable_list
 %type <decl_variable> decl_variable
+*/
 
 %type <code_block> code_block
 %type <block_statement> statement_block
@@ -69,7 +76,7 @@ AST_program * main_program;
 
 program:    decl_block code_block
             {
-                fprintf(bison_output, "program\n");
+                //fprintf(bison_output, "program\n");
                 $$ = new AST_program($1, $2);
                 main_program = $$;
             }
@@ -78,71 +85,73 @@ program:    decl_block code_block
 
 decl_block:    DECLBLOCK '{' '}'
                {
-                   fprintf(bison_output, "decl_block\n");
+                   //fprintf(bison_output, "decl_block\n");
                    $$ = new AST_decl_block();
                }
 
           |    DECLBLOCK '{' decl_statement_list '}'
                {
-                   fprintf(bison_output, "decl_block\n");
+                   //fprintf(bison_output, "decl_block\n");
                    $$ = $3;
                }
 ;
 
 decl_statement_list:   decl_statement_list decl_statement
                        {
+                           $$ = $1;
                            $$->push_back($2);
                        }
                        |   decl_statement
                        {
-                           $$ = new AST_decl_block();
-                           $$->push_back($1);
+                           $$ = $1;
                        }
 ;
 
 
 decl_statement:    INT decl_variable_list';'
                    {
-                       fprintf(bison_output, "decl_statement\n");
+                       //fprintf(bison_output, "decl_statement\n");
+                       $$ = $2;
                    }
               |    ';'
                    {
-                       fprintf(bison_output, "decl_statement empty\n");
-                       $$ = new AST_decl_statement();
+                       //fprintf(bison_output, "decl_statement empty\n");
+                       $$ = new AST_decl_block();
                    }
 ;
 
-decl_variable_list:    decl_variable_list ',' decl_variable
+
+decl_variable_list:    decl_variable_list ',' IDENTIFIER
                        {
-                           $$->push_back($3);
+                           $$ = $1;
+                           $$->push_back(string($3));
                        }
-                  |    decl_variable
+                  |    decl_variable_list ',' IDENTIFIER '[' INT_LITERAL ']'
                        {
-                           $$ = new AST_decl_statement();
-                           $$->push_back($1);
+                           $$ = $1;
+                           $$->push_back(string($3), $5);
+                       }
+                  |    IDENTIFIER
+                       {
+                           $$ = new AST_decl_block();
+                           $$->push_back(string($1));
+                       }
+                  |    IDENTIFIER '[' INT_LITERAL ']'
+                       {
+                           $$ = new AST_decl_block();
+                           $$->push_back(string($1), $3);
                        }
 ;
-
-decl_variable:    IDENTIFIER
-                  {
-                      $$ = new AST_decl_int_single($1);
-                  }
-             |    IDENTIFIER '[' INT_LITERAL ']'
-                  {
-                      $$ = new AST_decl_int_array($1, $3);
-                  }
-;
-
 
 
 code_block:    CODEBLOCK '{' '}'
                {
-                   fprintf(bison_output, "code_block empty\n");
+                   //fprintf(bison_output, "code_block empty\n");
                    $$ = new AST_code_block(new AST_block_statement());
                }
           |    CODEBLOCK '{' statement_list '}'
                {
-                   fprintf(bison_output, "code_block\n");
+                   //fprintf(bison_output, "code_block\n");
                    $$ = new AST_code_block($3);
                }
 ;
@@ -150,12 +159,12 @@ code_block:    CODEBLOCK '{' '}'
 
 statement_block:    '{' '}'
                     {
-                        fprintf(bison_output, "statement_block empty\n");
+                        //fprintf(bison_output, "statement_block empty\n");
                         $$ = new AST_block_statement();
                     }
                |    '{' statement_list '}'
                     {
-                        fprintf(bison_output, "statement_block\n");
+                        //fprintf(bison_output, "statement_block\n");
                         $$ = $2;
                     }
 ;
@@ -409,9 +418,10 @@ int main(int argc, char *argv[])
 	yyin = fopen(argv[1], "r");
 
 	int return_val = yyparse();
-    fprintf(bison_output, "\nRETURN VALUE : %d\n", return_val);
+    //fprintf(bison_output, "\nRETURN VALUE : %d\n", return_val);
 
     Traverse v;
     main_program->accept(v);
+    cout << "SUCCESS" << endl;
     return 0;
 }

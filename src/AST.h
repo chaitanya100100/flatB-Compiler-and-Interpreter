@@ -95,17 +95,38 @@ public:
     virtual void visit(AST_program *) = 0;
     virtual void visit(AST_decl_block *) = 0;
     virtual void visit(AST_code_block *) = 0;
+
+    virtual void visit(AST_expression_statement *) = 0;
+    virtual void visit(AST_assignment_statement *) = 0;
+    virtual void visit(AST_block_statement *) = 0;
+    virtual void visit(AST_if_statement *) = 0;
+    virtual void visit(AST_ifelse_statement *) = 0;
+    virtual void visit(AST_for_statement *) = 0;
+    virtual void visit(AST_while_statement *) = 0;
+    virtual void visit(AST_goto_statement *) = 0;
+    virtual void visit(AST_read_statement *) = 0;
+    virtual void visit(AST_print_statement *) = 0;
+    virtual void visit(AST_label_statement *) = 0;
+
+    virtual void visit(AST_binary_operator_expression *) = 0;
+    virtual void visit(AST_unary_operator_expression *) = 0;
+
+    virtual void visit(AST_variable_single_int *) = 0;
+    virtual void visit(AST_variable_array_int *) = 0;
+    virtual void visit(AST_int_literal *) = 0;
+    virtual void visit(AST_string_literal *) = 0;
 };
 
 
 
-// main AST_node and AST_program
+// main AST_node
 class AST_node
 {
 public:
     virtual void accept(Visitor &) = 0;
 };
 
+// program node
 class AST_program : public AST_node
 {
 private:
@@ -117,48 +138,17 @@ public:
     void accept(Visitor &);
 };
 
-
-// declaration block nodes
+// declaration block node
 class AST_decl_block : public AST_node
 {
 private:
-    vector<AST_decl_statement*> decl_statements;
+    friend class Traverse;
+    vector<string> single_ints;
+    vector<pair<string, int> > array_ints;
 public:
-    void push_back(AST_decl_statement * decl_statement);
-    void accept(Visitor &);
-};
-
-class AST_decl_statement : public AST_node
-{
-private:
-    vector<AST_decl_variable*> decl_variables;
-public:
-    void push_back(AST_decl_variable * decl_variable);
-    void accept(Visitor &);
-};
-
-class AST_decl_variable : public AST_node
-{
-public:
-
-};
-
-class AST_decl_int_single : public AST_decl_variable
-{
-private:
-    string id;
-public:
-    AST_decl_int_single(string id);
-    void accept(Visitor &);
-};
-
-class AST_decl_int_array : public AST_decl_variable
-{
-private:
-    string id;
-    int size;
-public:
-    AST_decl_int_array(string id, int size);
+    void push_back(string name);
+    void push_back(string name, int size);
+    void push_back(AST_decl_block * decl_block);
     void accept(Visitor &);
 };
 
@@ -167,6 +157,7 @@ public:
 class AST_code_block : public AST_node
 {
 private:
+    friend class Traverse;
     AST_block_statement * block_statement;
 public:
     AST_code_block(AST_block_statement * block_statement = NULL);
@@ -187,6 +178,7 @@ class AST_statement : public AST_node
 class AST_expression_statement : public AST_statement
 {
 private:
+    friend class Traverse;
     AST_expression * expression;
 public:
     AST_expression_statement(AST_expression * expression);
@@ -196,6 +188,7 @@ public:
 class AST_assignment_statement : public AST_statement
 {
 private:
+    friend class Traverse;
     AST_variable * variable;
     AST_expression * expression;
 public:
@@ -206,6 +199,7 @@ public:
 class AST_block_statement : public AST_statement
 {
 private:
+    friend class Traverse;
     vector<AST_statement*> statements;
 public:
     void push_back(AST_statement * statement);
@@ -215,6 +209,7 @@ public:
 class AST_if_statement : public AST_statement
 {
 private:
+    friend class Traverse;
     AST_expression * condition;
     AST_block_statement * if_block;
 public:
@@ -225,6 +220,7 @@ public:
 class AST_ifelse_statement : public AST_statement
 {
 private:
+    friend class Traverse;
     AST_expression * condition;
     AST_block_statement * if_block;
     AST_block_statement * else_block;
@@ -237,6 +233,7 @@ public:
 class AST_for_statement : public AST_statement
 {
 private:
+    friend class Traverse;
     AST_variable * variable;
     AST_expression * from;
     AST_expression * step;
@@ -251,6 +248,7 @@ public:
 class AST_while_statement : public AST_statement
 {
 private:
+    friend class Traverse;
     AST_expression * condition;
     AST_block_statement * while_block;
 public:
@@ -261,6 +259,7 @@ public:
 class AST_goto_statement : public AST_statement
 {
 private:
+    friend class Traverse;
     AST_expression * condition;
     string label;
 public:
@@ -272,6 +271,7 @@ public:
 class AST_read_statement : public AST_statement
 {
 private:
+    friend class Traverse;
     vector<AST_variable*> variables;
 public:
     void push_back(AST_variable * variable);
@@ -287,6 +287,7 @@ struct AST_printable
 class AST_print_statement : public AST_statement
 {
 private:
+    friend class Traverse;
     vector<AST_printable> printables;
 public:
     void push_back(AST_string_literal * string_literal);
@@ -298,6 +299,7 @@ public:
 class AST_label_statement : public AST_statement
 {
 private:
+    friend class Traverse;
     string label;
 public:
     AST_label_statement(string label);
@@ -311,8 +313,6 @@ main expression node and all derived expressions nodes
 */
 class AST_expression : public AST_node
 {
-public:
-
 };
 
 class AST_binary_operator_expression : public AST_expression
@@ -334,6 +334,7 @@ public:
     static const int AND = 13;
 
 private:
+    friend class Traverse;
     AST_expression * left;
     AST_expression * right;
     int op;
@@ -349,6 +350,7 @@ public:
     static const int ERROR = 0;
     static const int UMINUS = 1;
 private:
+    friend class Traverse;
     AST_expression * expression;
     int op;
 public:
@@ -360,13 +362,12 @@ public:
 
 class AST_variable : public AST_expression
 {
-public:
-
 };
 
 class AST_variable_single_int : public AST_variable
 {
 private:
+    friend class Traverse;
     string variable_name;
 public:
     AST_variable_single_int(string variable_name);
@@ -376,6 +377,7 @@ public:
 class AST_variable_array_int : public AST_variable
 {
 private:
+    friend class Traverse;
     string array_name;
     AST_expression* index;
 public:
@@ -386,6 +388,7 @@ public:
 class AST_int_literal : public AST_expression
 {
 private:
+    friend class Traverse;
     int int_literal;
 public:
     AST_int_literal(int int_literal);
@@ -395,6 +398,7 @@ public:
 class AST_string_literal : public AST_node
 {
 private:
+    friend class Traverse;
     string string_literal;
 public:
     AST_string_literal(string string_literal);

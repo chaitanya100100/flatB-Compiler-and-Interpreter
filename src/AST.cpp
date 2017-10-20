@@ -29,50 +29,26 @@ void AST_program::accept(Visitor & v)
     v.visit(this);
 }
 
+
 /*
 ============== declaration block ==================
 */
-//------------------------------
-void AST_decl_block::push_back(AST_decl_statement* decl_statement)
+void AST_decl_block::push_back(string name)
 {
-    decl_statements.push_back(decl_statement);
+    single_ints.push_back(name);
+}
+void AST_decl_block::push_back(string name, int size)
+{
+    array_ints.push_back(make_pair(name, size));
+}
+void AST_decl_block::push_back(AST_decl_block * decl_block)
+{
+    single_ints.insert(single_ints.end(), (decl_block->single_ints).begin(), (decl_block->single_ints).end());
+    array_ints.insert(array_ints.end(), (decl_block->array_ints).begin(), (decl_block->array_ints).end());
 }
 void AST_decl_block::accept(Visitor & v)
 {
     v.visit(this);
-}
-
-
-//------------------------------
-void AST_decl_statement::push_back(AST_decl_variable * decl_variable)
-{
-    decl_variables.push_back(decl_variable);
-}
-void AST_decl_statement::accept(Visitor & v)
-{
-
-}
-
-//------------------------------
-AST_decl_int_single::AST_decl_int_single(string id)
-{
-    this->id = id;
-}
-void AST_decl_int_single::accept(Visitor & v)
-{
-
-}
-
-
-//------------------------------
-AST_decl_int_array::AST_decl_int_array(string id, int size)
-{
-    this->id = id;
-    this->size = size;
-}
-void AST_decl_int_array::accept(Visitor & v)
-{
-
 }
 
 
@@ -86,6 +62,7 @@ AST_code_block::AST_code_block(AST_block_statement * block_statement)
 }
 void AST_code_block::accept(Visitor & v)
 {
+    v.visit(this);
 }
 
 
@@ -99,7 +76,7 @@ AST_expression_statement::AST_expression_statement(AST_expression * expression)
 }
 void AST_expression_statement::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 //------------------------------
@@ -110,7 +87,7 @@ AST_assignment_statement::AST_assignment_statement(AST_variable * variable, AST_
 }
 void AST_assignment_statement::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 //------------------------------
@@ -120,7 +97,7 @@ void AST_block_statement::push_back(AST_statement * statement)
 }
 void AST_block_statement::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 //------------------------------
@@ -131,7 +108,7 @@ AST_if_statement::AST_if_statement(AST_expression * condition, AST_block_stateme
 }
 void AST_if_statement::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 //------------------------------
@@ -143,7 +120,7 @@ AST_ifelse_statement::AST_ifelse_statement(AST_expression * condition, AST_block
 }
 void AST_ifelse_statement::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 //------------------------------
@@ -165,7 +142,7 @@ AST_for_statement::AST_for_statement(AST_variable * variable, AST_expression * f
 }
 void AST_for_statement::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 
@@ -177,7 +154,7 @@ AST_while_statement::AST_while_statement(AST_expression * condition, AST_block_s
 }
 void AST_while_statement::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 //------------------------------
@@ -193,7 +170,7 @@ AST_goto_statement::AST_goto_statement(string label)
 }
 void AST_goto_statement::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 //------------------------------
@@ -203,7 +180,7 @@ void AST_read_statement::push_back(AST_variable * variable)
 }
 void AST_read_statement::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 //------------------------------
@@ -223,7 +200,7 @@ void AST_print_statement::push_back(AST_expression * expression)
 }
 void AST_print_statement::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 //------------------------------
@@ -233,7 +210,7 @@ AST_label_statement::AST_label_statement(string label)
 }
 void AST_label_statement::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 
@@ -262,7 +239,7 @@ AST_binary_operator_expression::AST_binary_operator_expression(AST_expression * 
 }
 void AST_binary_operator_expression::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 AST_unary_operator_expression::AST_unary_operator_expression(AST_expression * expression, string op)
@@ -273,7 +250,7 @@ AST_unary_operator_expression::AST_unary_operator_expression(AST_expression * ex
 }
 void AST_unary_operator_expression::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 
@@ -288,7 +265,7 @@ AST_variable_single_int::AST_variable_single_int(string variable_name)
 }
 void AST_variable_single_int::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 //------------------------------
@@ -299,7 +276,7 @@ AST_variable_array_int::AST_variable_array_int(string array_name, AST_expression
 }
 void AST_variable_array_int::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 //------------------------------
@@ -309,7 +286,7 @@ AST_int_literal::AST_int_literal(int int_literal)
 }
 void AST_int_literal::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 //------------------------------
@@ -319,7 +296,7 @@ AST_string_literal::AST_string_literal(string string_literal)
 }
 void AST_string_literal::accept(Visitor & v)
 {
-
+    v.visit(this);
 }
 
 
