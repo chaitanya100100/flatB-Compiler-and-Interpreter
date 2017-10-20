@@ -7,3 +7,6 @@
 *- assignment operator needs to be declared outside expression
 - enum for relational operator
 - check for proper if else pairing
+
+
+- make separation between variable in decl_block and variable in code_block
