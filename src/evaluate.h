@@ -1,8 +1,15 @@
+#include<map>
 
-class Traverse;
+class Evaluate;
 
-class Traverse : public Visitor
+class Evaluate : public Visitor
 {
+private:
+    map<string, int> ST_single_int;
+    map<string, vector<int> > ST_array_int;
+    string str;
+    int num;
+
 public:
     int visit(AST_program * program);
     int visit(AST_decl_block * decl_block);

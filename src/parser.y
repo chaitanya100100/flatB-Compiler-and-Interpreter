@@ -420,8 +420,8 @@ int main(int argc, char *argv[])
 	int return_val = yyparse();
     //fprintf(bison_output, "\nRETURN VALUE : %d\n", return_val);
 
-    Traverse v;
+    Evaluate v;
     main_program->accept(v);
-    cout << "SUCCESS" << endl;
+    cout << "\n\n SUCCESS" << endl;
     return 0;
 }

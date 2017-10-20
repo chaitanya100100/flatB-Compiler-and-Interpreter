@@ -92,30 +92,31 @@ typedef union _NODE_ YYSTYPE;
 class Visitor
 {
 public:
-    virtual void visit(AST_program *) = 0;
-    virtual void visit(AST_decl_block *) = 0;
-    virtual void visit(AST_code_block *) = 0;
+    virtual int visit(AST_program *) = 0;
+    virtual int visit(AST_decl_block *) = 0;
+    virtual int visit(AST_code_block *) = 0;
 
-    virtual void visit(AST_expression_statement *) = 0;
-    virtual void visit(AST_assignment_statement *) = 0;
-    virtual void visit(AST_block_statement *) = 0;
-    virtual void visit(AST_if_statement *) = 0;
-    virtual void visit(AST_ifelse_statement *) = 0;
-    virtual void visit(AST_for_statement *) = 0;
-    virtual void visit(AST_while_statement *) = 0;
-    virtual void visit(AST_goto_statement *) = 0;
-    virtual void visit(AST_read_statement *) = 0;
-    virtual void visit(AST_print_statement *) = 0;
-    virtual void visit(AST_label_statement *) = 0;
+    virtual int visit(AST_expression_statement *) = 0;
+    virtual int visit(AST_assignment_statement *) = 0;
+    virtual int visit(AST_block_statement *) = 0;
+    virtual int visit(AST_if_statement *) = 0;
+    virtual int visit(AST_ifelse_statement *) = 0;
+    virtual int visit(AST_for_statement *) = 0;
+    virtual int visit(AST_while_statement *) = 0;
+    virtual int visit(AST_goto_statement *) = 0;
+    virtual int visit(AST_read_statement *) = 0;
+    virtual int visit(AST_print_statement *) = 0;
+    virtual int visit(AST_label_statement *) = 0;
 
-    virtual void visit(AST_binary_operator_expression *) = 0;
-    virtual void visit(AST_unary_operator_expression *) = 0;
+    virtual int visit(AST_binary_operator_expression *) = 0;
+    virtual int visit(AST_unary_operator_expression *) = 0;
 
-    virtual void visit(AST_variable_single_int *) = 0;
-    virtual void visit(AST_variable_array_int *) = 0;
-    virtual void visit(AST_int_literal *) = 0;
-    virtual void visit(AST_string_literal *) = 0;
+    virtual int visit(AST_variable_single_int *) = 0;
+    virtual int visit(AST_variable_array_int *) = 0;
+    virtual int visit(AST_int_literal *) = 0;
+    virtual int visit(AST_string_literal *) = 0;
 };
+
 
 
 
@@ -123,25 +124,27 @@ public:
 class AST_node
 {
 public:
-    virtual void accept(Visitor &) = 0;
+    virtual int accept(Visitor &) = 0;
 };
 
 // program node
 class AST_program : public AST_node
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     AST_decl_block * decl_block;
     AST_code_block * code_block;
 public:
     AST_program(AST_decl_block * decl_block, AST_code_block * code_block);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 // declaration block node
 class AST_decl_block : public AST_node
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     vector<string> single_ints;
     vector<pair<string, int> > array_ints;
@@ -149,7 +152,7 @@ public:
     void push_back(string name);
     void push_back(string name, int size);
     void push_back(AST_decl_block * decl_block);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 
@@ -157,11 +160,12 @@ public:
 class AST_code_block : public AST_node
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     AST_block_statement * block_statement;
 public:
     AST_code_block(AST_block_statement * block_statement = NULL);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 
@@ -178,61 +182,67 @@ class AST_statement : public AST_node
 class AST_expression_statement : public AST_statement
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     AST_expression * expression;
 public:
     AST_expression_statement(AST_expression * expression);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 class AST_assignment_statement : public AST_statement
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     AST_variable * variable;
     AST_expression * expression;
 public:
     AST_assignment_statement(AST_variable * variable, AST_expression * expression);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 class AST_block_statement : public AST_statement
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     vector<AST_statement*> statements;
 public:
     void push_back(AST_statement * statement);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 class AST_if_statement : public AST_statement
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     AST_expression * condition;
     AST_block_statement * if_block;
 public:
     AST_if_statement(AST_expression * condition, AST_block_statement * if_block);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 class AST_ifelse_statement : public AST_statement
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     AST_expression * condition;
     AST_block_statement * if_block;
     AST_block_statement * else_block;
 public:
     AST_ifelse_statement(AST_expression * condition, AST_block_statement * if_block, AST_block_statement * else_block);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 
 class AST_for_statement : public AST_statement
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     AST_variable * variable;
     AST_expression * from;
@@ -242,40 +252,43 @@ private:
 public:
     AST_for_statement(AST_variable * variable, AST_expression * from, AST_expression * step, AST_expression * to, AST_block_statement * for_block);
     AST_for_statement(AST_variable * variable, AST_expression * from, AST_expression * to, AST_block_statement * for_block);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 class AST_while_statement : public AST_statement
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     AST_expression * condition;
     AST_block_statement * while_block;
 public:
     AST_while_statement(AST_expression * condition, AST_block_statement * while_block);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 class AST_goto_statement : public AST_statement
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     AST_expression * condition;
     string label;
 public:
     AST_goto_statement(AST_expression * condition, string label);
     AST_goto_statement(string label);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 class AST_read_statement : public AST_statement
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     vector<AST_variable*> variables;
 public:
     void push_back(AST_variable * variable);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 
@@ -287,23 +300,25 @@ struct AST_printable
 class AST_print_statement : public AST_statement
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     vector<AST_printable> printables;
 public:
     void push_back(AST_string_literal * string_literal);
     void push_back(AST_expression * expression);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 
 class AST_label_statement : public AST_statement
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     string label;
 public:
     AST_label_statement(string label);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 
@@ -334,13 +349,14 @@ public:
     static const int AND = 13;
 
 private:
+    friend class Evaluate;
     friend class Traverse;
     AST_expression * left;
     AST_expression * right;
     int op;
 public:
     AST_binary_operator_expression(AST_expression * left, AST_expression * right, string op_);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 
@@ -350,60 +366,69 @@ public:
     static const int ERROR = 0;
     static const int UMINUS = 1;
 private:
+    friend class Evaluate;
     friend class Traverse;
     AST_expression * expression;
     int op;
 public:
     AST_unary_operator_expression(AST_expression * expression, string op);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 
 
 class AST_variable : public AST_expression
 {
+public:
+    string type;
+
 };
 
 class AST_variable_single_int : public AST_variable
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     string variable_name;
 public:
     AST_variable_single_int(string variable_name);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 class AST_variable_array_int : public AST_variable
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     string array_name;
     AST_expression* index;
 public:
     AST_variable_array_int(string array_name, AST_expression * index);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 class AST_int_literal : public AST_expression
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     int int_literal;
 public:
     AST_int_literal(int int_literal);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 class AST_string_literal : public AST_node
 {
 private:
+    friend class Evaluate;
     friend class Traverse;
     string string_literal;
 public:
     AST_string_literal(string string_literal);
-    void accept(Visitor &);
+    int accept(Visitor &);
 };
 
 
 #include "traverse.h"
+#include "evaluate.h"

@@ -10,7 +10,7 @@ parser.tab.h: parser.y AST.cpp AST.h
 lex.yy.c: scanner.l parser.tab.h AST.cpp AST.h
 	flex scanner.l
 
-AST.o: AST.cpp AST.h traverse.cpp traverse.h
+AST.o: AST.cpp AST.h traverse.cpp traverse.h evaluate.cpp evaluate.h
 	g++ -std=c++14 -c AST.cpp -o AST.o
 
 

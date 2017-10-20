@@ -1,110 +1,45 @@
 declblock from scanner
-identifier: a
-identifier: b
-identifier: d
-integer literal: 521
-identifier: e
-integer literal: 62
-identifier: f
-identifier: g
-integer literal: 10
-identifier: d
-integer literal: 54
-identifier: e
-integer literal: 2
-identifier: f
-identifier: g
-identifier: h
-integer literal: 20
 identifier: i
-identifier: j
-codeblock from scanner
-identifier: d
-integer literal: 5
 identifier: a
-integer literal: 5
-identifier: df
-identifier: d
-integer literal: 65
-identifier: x
-identifier: y
-integer literal: 2
-identifier: d
-identifier: p
-identifier: x
-identifier: y
-integer literal: 0
-identifier: b
-integer literal: 9
-integer literal: 88
-identifier: nm
-identifier: d
-identifier: z
-identifier: a
-integer literal: 2
-identifier: x
-integer literal: 2
-identifier: p
-integer literal: 2
-identifier: d9
-identifier: x
-integer literal: 5
-integer literal: 6
-integer literal: 2
-integer literal: 9
-integer literal: 1
-identifier: p
-identifier: as
-identifier: x
-integer literal: 6
-identifier: x
-integer literal: 5
-integer literal: 9
-identifier: x
-integer literal: 9
-integer literal: 5
-identifier: s
-identifier: p
-identifier: ux
-identifier: b
-integer literal: 9
-identifier: j
-integer literal: 1
-integer literal: 2
 integer literal: 100
-identifier: j
-identifier: j
-integer literal: 1
-identifier: m
-integer literal: 0
+identifier: n
+identifier: sum1
+identifier: sum2
 identifier: k
-integer literal: 2
-identifier: m
-identifier: l
-identifier: plo
-identifier: xl
-identifier: df
-integer literal: 8
-integer literal: 9
-identifier: l
-identifier: x
-identifier: u
-identifier: l
-integer literal: 5
-identifier: d
+codeblock from scanner
+string literal: "Enter n : "
+identifier: n
+identifier: i
+integer literal: 0
+identifier: n
 identifier: a
-identifier: ds
-identifier: df
-identifier: d
-identifier: x
-string literal: "abc"
-identifier: u
-identifier: l
-integer literal: 5
-identifier: d
-string literal: "df"
+identifier: i
+identifier: sum1
+integer literal: 0
+identifier: i
+integer literal: 0
+identifier: n
+identifier: sum1
+identifier: sum1
 identifier: a
-identifier: ds
-identifier: df
-identifier: d
-identifier: sdf
+identifier: i
+identifier: sum2
+integer literal: 0
+identifier: i
+integer literal: 0
+identifier: i
+identifier: n
+identifier: sum2
+identifier: sum2
+identifier: a
+identifier: i
+identifier: i
+identifier: i
+integer literal: 1
+identifier: sum1
+identifier: sum2
+string literal: "both are working finely"
+string literal: "Sum1 is : "
+identifier: sum1
+string literal: "Sum2 is : "
+identifier: sum2
