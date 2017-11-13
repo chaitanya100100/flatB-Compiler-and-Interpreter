@@ -1,5 +1,6 @@
+
 bcc:	parser.tab.c lex.yy.c AST.o
-	g++ -std=c++14 parser.tab.c lex.yy.c AST.o -lfl -o bcc
+	g++ -std=c++14 parser.tab.c lex.yy.c AST.o -lfl `llvm-config --cxxflags --ldflags --system-libs --libs core` -o bcc
 
 parser.tab.c: parser.y AST.cpp AST.h
 	bison -d parser.y
@@ -10,10 +11,10 @@ parser.tab.h: parser.y AST.cpp AST.h
 lex.yy.c: scanner.l parser.tab.h AST.cpp AST.h
 	flex scanner.l
 
-AST.o: AST.cpp AST.h traverse.cpp traverse.h evaluate.cpp evaluate.h
-	g++ -std=c++14 -c AST.cpp -o AST.o
+AST.o: AST.cpp AST.h traverse.cpp traverse.h evaluate.cpp evaluate.h codegen.h codegen.cpp
+	g++ -std=c++14 -c AST.cpp  `llvm-config --cxxflags --ldflags --system-libs --libs core` -o AST.o
 
 
 .PHONY: clean
 clean:
-	-@rm -rf parser.tab.c parser.tab.h lex.yy.c AST.o  traverse.o bcc 2>/dev/null || true
+	-@rm -rf parser.tab.c parser.tab.h lex.yy.c AST.o  bcc 2>/dev/null || true

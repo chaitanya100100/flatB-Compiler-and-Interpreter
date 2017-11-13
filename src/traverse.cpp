@@ -13,12 +13,12 @@ int Traverse::visit(AST_decl_block * decl_block)
     cout << "decl_block" << endl;
 
     cout << "single ints : ";
-    for(int i = 0; i < decl_block->single_ints.size(); i++)
+    for(int i = 0; i < (int)decl_block->single_ints.size(); i++)
         cout << decl_block->single_ints[i] << ", ";
     cout << endl;
 
     cout << "array ints : ";
-    for(int i = 0; i < decl_block->array_ints.size(); i++)
+    for(int i = 0; i < (int)decl_block->array_ints.size(); i++)
         cout << decl_block->array_ints[i].first << ":" << decl_block->array_ints[i].second << ", ";
     cout << endl;
     return 0;
@@ -52,7 +52,7 @@ int Traverse::visit(AST_assignment_statement * assignment_statement)
 int Traverse::visit(AST_block_statement * block_statement)
 {
     cout << "block_statement" << endl;
-    for(int i = 0; i < block_statement->statements.size(); i++)
+    for(int i = 0; i < (int)block_statement->statements.size(); i++)
         block_statement->statements[i]->accept(*this);
     return 0;
 }

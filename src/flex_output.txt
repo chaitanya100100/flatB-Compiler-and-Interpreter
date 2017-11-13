@@ -1,45 +1,26 @@
 declblock from scanner
-identifier: i
 identifier: a
 integer literal: 100
-identifier: n
-identifier: sum1
-identifier: sum2
-identifier: k
+identifier: b
+identifier: c
 codeblock from scanner
-string literal: "Enter n : "
-identifier: n
-identifier: i
-integer literal: 0
-identifier: n
+identifier: b
+integer literal: 2
+identifier: c
+integer literal: 3
 identifier: a
-identifier: i
-identifier: sum1
-integer literal: 0
-identifier: i
-integer literal: 0
-identifier: n
-identifier: sum1
-identifier: sum1
+integer literal: 2
+identifier: b
 identifier: a
-identifier: i
-identifier: sum2
-integer literal: 0
-identifier: i
-integer literal: 0
-identifier: i
-identifier: n
-identifier: sum2
-identifier: sum2
+integer literal: 4
+identifier: c
 identifier: a
-identifier: i
-identifier: i
-identifier: i
-integer literal: 1
-identifier: sum1
-identifier: sum2
-string literal: "both are working finely"
-string literal: "Sum1 is : "
-identifier: sum1
-string literal: "Sum2 is : "
-identifier: sum2
+integer literal: 2
+identifier: a
+integer literal: 4
+identifier: b
+integer literal: 0
+integer literal: 2
+integer literal: 10
+identifier: a
+identifier: b

@@ -2,6 +2,15 @@
 #include <string>
 using namespace std;
 
+// llvm include
+#include <llvm/IR/Module.h>
+#include <llvm/IR/Verifier.h>
+#include <llvm/IR/DerivedTypes.h>
+#include <llvm/IR/IRBuilder.h>
+#include <llvm/IR/LLVMContext.h>
+using namespace llvm;
+
+
 // main AST node
 class AST_node;
 class AST_program;
@@ -131,7 +140,7 @@ public:
 class AST_program : public AST_node
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     AST_decl_block * decl_block;
     AST_code_block * code_block;
@@ -144,7 +153,7 @@ public:
 class AST_decl_block : public AST_node
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     vector<string> single_ints;
     vector<pair<string, int> > array_ints;
@@ -160,7 +169,7 @@ public:
 class AST_code_block : public AST_node
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     AST_block_statement * block_statement;
 public:
@@ -182,7 +191,7 @@ class AST_statement : public AST_node
 class AST_expression_statement : public AST_statement
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     AST_expression * expression;
 public:
@@ -193,7 +202,7 @@ public:
 class AST_assignment_statement : public AST_statement
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     AST_variable * variable;
     AST_expression * expression;
@@ -205,7 +214,7 @@ public:
 class AST_block_statement : public AST_statement
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     vector<AST_statement*> statements;
 public:
@@ -216,7 +225,7 @@ public:
 class AST_if_statement : public AST_statement
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     AST_expression * condition;
     AST_block_statement * if_block;
@@ -228,7 +237,7 @@ public:
 class AST_ifelse_statement : public AST_statement
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     AST_expression * condition;
     AST_block_statement * if_block;
@@ -242,7 +251,7 @@ public:
 class AST_for_statement : public AST_statement
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     AST_variable * variable;
     AST_expression * from;
@@ -258,7 +267,7 @@ public:
 class AST_while_statement : public AST_statement
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     AST_expression * condition;
     AST_block_statement * while_block;
@@ -270,7 +279,7 @@ public:
 class AST_goto_statement : public AST_statement
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     AST_expression * condition;
     string label;
@@ -283,7 +292,7 @@ public:
 class AST_read_statement : public AST_statement
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     vector<AST_variable*> variables;
 public:
@@ -300,7 +309,7 @@ struct AST_printable
 class AST_print_statement : public AST_statement
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     vector<AST_printable> printables;
 public:
@@ -313,7 +322,7 @@ public:
 class AST_label_statement : public AST_statement
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     string label;
 public:
@@ -349,7 +358,7 @@ public:
     static const int AND = 13;
 
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     AST_expression * left;
     AST_expression * right;
@@ -366,7 +375,7 @@ public:
     static const int ERROR = 0;
     static const int UMINUS = 1;
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     AST_expression * expression;
     int op;
@@ -387,7 +396,7 @@ public:
 class AST_variable_single_int : public AST_variable
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     string variable_name;
 public:
@@ -398,7 +407,7 @@ public:
 class AST_variable_array_int : public AST_variable
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     string array_name;
     AST_expression* index;
@@ -410,7 +419,7 @@ public:
 class AST_int_literal : public AST_expression
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     int int_literal;
 public:
@@ -421,7 +430,7 @@ public:
 class AST_string_literal : public AST_node
 {
 private:
-    friend class Evaluate;
+    friend class Evaluate; friend class CodeGen;
     friend class Traverse;
     string string_literal;
 public:
@@ -432,3 +441,4 @@ public:
 
 #include "traverse.h"
 #include "evaluate.h"
+#include "codegen.h"

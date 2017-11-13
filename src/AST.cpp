@@ -306,3 +306,4 @@ int AST_string_literal::accept(Visitor & v)
 //------------------------------
 #include "traverse.cpp"
 #include "evaluate.cpp"
+#include "codegen.cpp"

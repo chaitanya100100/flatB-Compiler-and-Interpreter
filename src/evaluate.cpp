@@ -14,12 +14,12 @@ int Evaluate::visit(AST_decl_block * decl_block)
     //cout << "decl_block" << endl;
 
     //cout << "single ints : ";
-    for(int i = 0; i < decl_block->single_ints.size(); i++)
+    for(int i = 0; i < (int)decl_block->single_ints.size(); i++)
         ST_single_int[decl_block->single_ints[i]] = 0;
     //cout << endl;
 
     //cout << "array ints : ";
-    for(int i = 0; i < decl_block->array_ints.size(); i++)
+    for(int i = 0; i < (int)decl_block->array_ints.size(); i++)
         ST_array_int[decl_block->array_ints[i].first] = vector<int>(decl_block->array_ints[i].second, 0);
     //cout << endl;
     //cout << ST_single_int.size() << endl;
@@ -63,7 +63,7 @@ int Evaluate::visit(AST_assignment_statement * assignment_statement)
 int Evaluate::visit(AST_block_statement * block_statement)
 {
     //cout << "block_statement" << endl;
-    for(int i = 0; i < block_statement->statements.size(); i++)
+    for(int i = 0; i < (int)block_statement->statements.size(); i++)
         block_statement->statements[i]->accept(*this);
     return 0;
 }
@@ -169,7 +169,7 @@ int Evaluate::visit(AST_goto_statement * goto_statement)
 int Evaluate::visit(AST_read_statement * read_statement)
 {
     //cout << "read_statement" << endl;
-    for(int i = 0; i < read_statement->variables.size(); i++)
+    for(int i = 0; i < (int)read_statement->variables.size(); i++)
     {
         int x;
         cin >> x;
@@ -185,7 +185,7 @@ int Evaluate::visit(AST_read_statement * read_statement)
 int Evaluate::visit(AST_print_statement * print_statement)
 {
     //cout << "print_statement" << endl;
-    for(int i = 0; i < print_statement->printables.size(); i++)
+    for(int i = 0; i < (int)print_statement->printables.size(); i++)
     {
         if(print_statement->printables[i].expression)
         {
@@ -196,7 +196,7 @@ int Evaluate::visit(AST_print_statement * print_statement)
         else
         {
             print_statement->printables[i].string_literal->accept(*this);
-            cout << str << " ";
+            cout << str.substr(1, str.length()-2) << " ";
         }
     }
     return 0;
