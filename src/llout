@@ -4,7 +4,7 @@
 @c = common global i32 0
 @a = global [100 x i32] zeroinitializer
 @0 = private unnamed_addr constant [3 x i8] c"%s\00"
-@1 = private unnamed_addr constant [8 x i8] c"working\00"
+@1 = private unnamed_addr constant [3 x i8] c"hi\00"
 @2 = private unnamed_addr constant [3 x i8] c"%s\00"
 @3 = private unnamed_addr constant [2 x i8] c"\0A\00"
 
@@ -12,12 +12,11 @@ declare i32 @printf(i8*, ...)
 
 define internal void @main() {
 entry:
-  store i32 2, i32* @b
-  %0 = load i32, i32* @b
-  br i32 %0, label %if, label %ifnext
+  store i32 -1, i32* @b
+  br i1 false, label %if, label %ifnext
 
 if:                                               ; preds = %entry
-  %printfCall = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @0, i32 0, i32 0), i8* getelementptr inbounds ([8 x i8], [8 x i8]* @1, i32 0, i32 0))
+  %printfCall = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @0, i32 0, i32 0), i8* getelementptr inbounds ([3 x i8], [3 x i8]* @1, i32 0, i32 0))
   %printfCall1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @2, i32 0, i32 0), i8* getelementptr inbounds ([2 x i8], [2 x i8]* @3, i32 0, i32 0))
   br label %ifnext
 

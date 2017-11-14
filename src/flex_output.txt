@@ -5,6 +5,6 @@ identifier: b
 identifier: c
 codeblock from scanner
 identifier: b
-integer literal: 2
-identifier: b
-string literal: "working"
+integer literal: 1
+integer literal: 0
+string literal: "hi"

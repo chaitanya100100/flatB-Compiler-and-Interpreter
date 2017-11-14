@@ -1,6 +1,7 @@
 declblock{
     int first, second[20];
     int third;
+    int a, b, c, d, k, x, l, df, dfs, ds, b;
     ;
 }
 

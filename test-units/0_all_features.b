@@ -1,7 +1,7 @@
 declblock{
     int a, b, d[521], e[62], f, g[10];
     int d[54], e[2], f, g, h[20], i, j;
-    ;;
+    int df;;
 }
 
 codeblock{

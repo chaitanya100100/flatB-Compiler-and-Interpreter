@@ -12,12 +12,48 @@ CodeGen::CodeGen()
     module = new Module("flatB", getGlobalContext());
     CalleeF = module->getOrInsertFunction("printf",FunctionType::get(IntegerType::getInt32Ty(getGlobalContext()), PointerType::get(Type::getInt8Ty(getGlobalContext()), 0), true ));
     load_variable = 0;
+    is_condition = 0;
+    is_expression = 0;
 }
 
 void CodeGen::dump()
 {
     //printf("\n\n");
     module->dump();
+}
+
+// helper to get expression
+Value * CodeGen::get_expression()
+{
+    Value * v = ret;
+    if(load_variable)
+    {
+        v = Builder.CreateLoad(v);
+        load_variable = 0;
+    }
+    if(is_condition)
+        v = Builder.CreateIntCast(v, Type::getInt32Ty(getGlobalContext()), true);
+
+    is_condition = 0;
+    is_expression = 1;
+    return v;
+}
+
+// helper to get expression
+Value * CodeGen::get_condition()
+{
+    Value * v = ret;
+    if(load_variable)
+    {
+        v = Builder.CreateLoad(v);
+        load_variable = 0;
+    }
+    if(is_expression)
+        v = Builder.CreateICmpNE(v, ConstantInt::get(Type::getInt32Ty(getGlobalContext()), 0, true));
+
+    is_condition = 1;
+    is_expression = 0;
+    return v;
 }
 
 // program
@@ -80,19 +116,14 @@ int CodeGen::visit(AST_code_block * code_block)
 int CodeGen::visit(AST_expression_statement * expression_statement)
 {
     expression_statement->expression->accept(*this);
-    load_variable = 0;
+    get_expression();
     return 0;
 }
 
 int CodeGen::visit(AST_assignment_statement * assignment_statement)
 {
     assignment_statement->expression->accept(*this);
-    Value * expr_value = ret;
-    if(load_variable)
-    {
-        expr_value = Builder.CreateLoad(expr_value);
-        load_variable = 0;
-    }
+    Value * expr_value = get_expression();
 
     assignment_statement->variable->accept(*this);
     Value * variable_value = ret;
@@ -116,16 +147,15 @@ int CodeGen::visit(AST_if_statement * if_statement)
     BasicBlock * next_BB = BasicBlock::Create(getGlobalContext(), "ifnext", funct);
 
     if_statement->condition->accept(*this);
-    Value * condition_value = ret;
-    if(load_variable){ condition_value = Builder.CreateLoad(condition_value); load_variable = 0;}
+    Value * condition_value = get_condition();
     //condition_value = Builder.CreateICmpEQ(condition_value, ConstantInt::get(Type::getInt1Ty(getGlobalContext()), true, true),"ifcond");
     Builder.CreateCondBr(condition_value, if_BB, next_BB);
 
     Builder.SetInsertPoint(if_BB);
 
     if_statement->if_block->accept(*this);
-    Value * if_value = ret;
-    if(load_variable){ if_value = Builder.CreateLoad(if_value); load_variable = 0;}
+    //Value * if_value = ret;
+    //if(load_variable){ if_value = Builder.CreateLoad(if_value); load_variable = 0;}
     Builder.CreateBr(next_BB);
 
     Builder.SetInsertPoint(next_BB);
@@ -141,8 +171,8 @@ int CodeGen::visit(AST_ifelse_statement * ifelse_statement)
     BasicBlock * next_BB = BasicBlock::Create(getGlobalContext(), "ifnext", funct);
 
     ifelse_statement->condition->accept(*this);
-    Value * condition_value = ret;
-    if(load_variable){ condition_value = Builder.CreateLoad(condition_value); load_variable = 0;}
+    Value * condition_value = get_condition();
+    //if(load_variable){ condition_value = Builder.CreateLoad(condition_value); load_variable = 0;}
     //condition_value = Builder.CreateICmpEQ(condition_value, ConstantInt::get(Type::getInt1Ty(getGlobalContext()), true, true),"ifcond");
 
     Builder.CreateCondBr(condition_value, if_BB, else_BB);
@@ -150,8 +180,8 @@ int CodeGen::visit(AST_ifelse_statement * ifelse_statement)
     Builder.SetInsertPoint(if_BB);
 
     ifelse_statement->if_block->accept(*this);
-    Value * if_value = ret;
-    if(load_variable){ if_value = Builder.CreateLoad(if_value); load_variable = 0;}
+    //Value * if_value = ret;
+    //if(load_variable){ if_value = Builder.CreateLoad(if_value); load_variable = 0;}
 
     Builder.CreateBr(next_BB);
     //if_BB = Builder.GetInsertBlock();
@@ -160,8 +190,8 @@ int CodeGen::visit(AST_ifelse_statement * ifelse_statement)
     Builder.SetInsertPoint(else_BB);
 
     ifelse_statement->else_block->accept(*this);
-    Value * else_value = ret;
-    if(load_variable){ else_value = Builder.CreateLoad(else_value); load_variable = 0;}
+    //Value * else_value = ret;
+    //if(load_variable){ else_value = Builder.CreateLoad(else_value); load_variable = 0;}
 
     Builder.CreateBr(next_BB);
     //else_BB = Builder.GetInsertBlock();
@@ -176,14 +206,13 @@ int CodeGen::visit(AST_for_statement * for_statement)
     Function *funct = Builder.GetInsertBlock()->getParent();
 
     for_statement->from->accept(*this);
-    Value * start = ret;
-    if(load_variable){ start = Builder.CreateLoad(start); load_variable = 0;}
+    Value * start = get_expression();
 
     for_statement->variable->accept(*this);
     Value * variable = ret;
-
     ret = Builder.CreateStore(start, variable);
     load_variable = 0;
+
     Value * cur_val = Builder.CreateLoad(variable);
 
     BasicBlock * for_condition_BB = BasicBlock::Create(getGlobalContext(), "for_condition", funct);
@@ -199,8 +228,7 @@ int CodeGen::visit(AST_for_statement * for_statement)
     phi->addIncoming(cur_val, preheaderBB);
 
     for_statement->to->accept(*this);
-    Value * to_val = ret;
-    if(load_variable){ to_val = Builder.CreateLoad(to_val); load_variable = 0;}
+    Value * to_val = get_expression();
 
     //Value * cur_val = Builder.CreateLoad(variable);
     Value * cond = Builder.CreateICmpSLT(phi, to_val);
@@ -208,12 +236,11 @@ int CodeGen::visit(AST_for_statement * for_statement)
 
     Builder.SetInsertPoint(for_body_BB);
     for_statement->for_block->accept(*this);
-    Value * body = ret;
-    if(load_variable){ body = Builder.CreateLoad(body); load_variable = 0;}
+    //Value * body = ret;
+    //if(load_variable){ body = Builder.CreateLoad(body); load_variable = 0;}
 
     for_statement->step->accept(*this);
-    Value * step = ret;
-    if(load_variable){ step = Builder.CreateLoad(step); load_variable = 0;}
+    Value * step = get_expression();
 
     cur_val = Builder.CreateLoad(variable);
     cur_val = Builder.CreateAdd(cur_val, step);
@@ -289,15 +316,14 @@ int CodeGen::visit(AST_while_statement * while_statement)
     Builder.CreateBr(cond_body);
     Builder.SetInsertPoint(cond_body);
     while_statement->condition->accept(*this);
-    Value * condition_value = ret;
-    if(load_variable){ condition_value = Builder.CreateLoad(condition_value); load_variable = 0;}
+    Value * condition_value = get_condition();
     //condition_value = Builder.CreateICmpEQ(condition_value, ConstantInt::get(Type::getInt1Ty(getGlobalContext()), true, true),"ifcond");
     Builder.CreateCondBr(condition_value, loop_body, afterBB);
 
     Builder.SetInsertPoint(loop_body);
     while_statement->while_block->accept(*this);
-    Value * body = ret;
-    if(load_variable){ body = Builder.CreateLoad(body); load_variable = 0;}
+    //Value * body = ret;
+    //if(load_variable){ body = Builder.CreateLoad(body); load_variable = 0;}
 
     Builder.CreateBr(cond_body);
     Builder.GetInsertBlock();
@@ -312,8 +338,7 @@ int CodeGen::visit(AST_goto_statement * goto_statement)
     if(goto_statement->condition)
     {
         goto_statement->condition->accept(*this);
-        cond = ret;
-        if(load_variable){ cond = Builder.CreateLoad(cond); load_variable = 0;}
+        cond = get_condition();
     }
 
     string & label = goto_statement->label;
@@ -355,8 +380,7 @@ int CodeGen::visit(AST_print_statement * print_statement)
         if(p.expression)
         {
             p.expression->accept(*this);
-            Value * v = ret;
-            if(load_variable){v = Builder.CreateLoad(v); load_variable = 0;}
+            Value * v = get_expression();
 
             Value* val = Builder.CreateGlobalStringPtr("%d");
             args.push_back(val);
@@ -415,24 +439,25 @@ int CodeGen::visit(AST_binary_operator_expression * binary_operator_expression)
     int op = binary_operator_expression->op;
 
     binary_operator_expression->left->accept(*this);
-    Value * L = ret;
-    if(load_variable){L = Builder.CreateLoad(L); load_variable = 0;}
+    Value * L = get_expression();
 
     binary_operator_expression->right->accept(*this);
-    Value * R = ret;
-    if(load_variable){R = Builder.CreateLoad(R); load_variable = 0;}
+    Value * R = get_expression();
 
-    if(op == PLUS)  ret = Builder.CreateAdd(L, R, "addtmp");
-    else if(op == MINUS) ret = Builder.CreateSub(L, R, "subtmp");
-    else if(op == MULTIPLY) ret = Builder.CreateMul(L, R, "multmp");
-    else if(op == DIVIDE) ret = Builder.CreateSDiv(L, R, "divtmp");
-    else if(op == MODULO) ret = Builder.CreateSRem(L, R, "modtmp");
-    else if(op == LESS) ret = Builder.CreateICmpSLT(L, R, "lttmp");
-    else if(op == GREATER) ret = Builder.CreateICmpSGT(L, R, "gttmp");
-    else if(op == LESS_OR_EQUAL) ret = Builder.CreateICmpSLE(L, R, "letmp");
-    else if(op == GREATER_OR_EQUAL) ret = Builder.CreateICmpSGE(L, R, "getmp");
-    else if(op == EQUAL) ret = Builder.CreateICmpEQ(L, R, "eqtmp");
-    else if(op == NOT_EQUAL) ret = Builder.CreateICmpNE(L, R, "netmp");
+    is_condition = is_expression = 0;
+
+    if(op == PLUS)  ret = Builder.CreateAdd(L, R, "addtmp"), is_expression = 1;
+    else if(op == MINUS) ret = Builder.CreateSub(L, R, "subtmp"), is_expression = 1;
+    else if(op == MULTIPLY) ret = Builder.CreateMul(L, R, "multmp"), is_expression = 1;
+    else if(op == DIVIDE) ret = Builder.CreateSDiv(L, R, "divtmp"), is_expression = 1;
+    else if(op == MODULO) ret = Builder.CreateSRem(L, R, "modtmp"), is_expression = 1;
+
+    else if(op == LESS) ret = Builder.CreateICmpSLT(L, R, "lttmp"), is_condition = 1;
+    else if(op == GREATER) ret = Builder.CreateICmpSGT(L, R, "gttmp"), is_condition = 1;
+    else if(op == LESS_OR_EQUAL) ret = Builder.CreateICmpSLE(L, R, "letmp"), is_condition = 1;
+    else if(op == GREATER_OR_EQUAL) ret = Builder.CreateICmpSGE(L, R, "getmp"), is_condition = 1;
+    else if(op == EQUAL) ret = Builder.CreateICmpEQ(L, R, "eqtmp"), is_condition = 1;
+    else if(op == NOT_EQUAL) ret = Builder.CreateICmpNE(L, R, "netmp"), is_condition = 1;
     else ret = ErrorV("Not a binary operator");
 
     load_variable = 0;
@@ -444,12 +469,13 @@ int CodeGen::visit(AST_unary_operator_expression * unary_operator_expression)
     int op = unary_operator_expression->op;
 
     unary_operator_expression->expression->accept(*this);
-    Value * R = ret;
-    if(load_variable){R = Builder.CreateLoad(R); load_variable = 0;}
+    Value * R = get_expression();
 
     if(op==UMINUS) ret = Builder.CreateNeg(R, "negtmp");
     else ret = ErrorV("Not a binary operator");
 
+    is_expression = 1;
+    is_condition = 0;
     load_variable = 0;
     return 0;
 }
@@ -465,6 +491,7 @@ int CodeGen::visit(AST_variable_single_int * variable_single_int)
     if(ret == NULL)
         ret = ErrorV("Unknown Variable name " + var_name);
     load_variable = 1;
+    is_expression = 1;
     return 0;
 }
 
@@ -473,8 +500,7 @@ int CodeGen::visit(AST_variable_array_int * variable_array_int)
     string & array_name = variable_array_int->array_name;
 
     variable_array_int->index->accept(*this);
-    Value * index = ret;
-    if(load_variable){index = Builder.CreateLoad(index); load_variable = 0;}
+    Value * index = get_expression();
 
     //index = ConstantInt::get(getGlobalContext(), APInt(32, 2));
 
@@ -486,12 +512,14 @@ int CodeGen::visit(AST_variable_array_int * variable_array_int)
     array_index.push_back(index);
     ret = Builder.CreateGEP(module->getNamedGlobal(array_name), array_index, array_name+"_IDX");
     load_variable = 1;
+    is_expression = 1;
     //ret = Builder.CreateLoad(ret);
     return 0;
 }
 
 int CodeGen::visit(AST_int_literal * int_literal)
 {
+    is_expression = 1;
     ret = ConstantInt::get(getGlobalContext(), llvm::APInt(32, int_literal->int_literal));
     return 0;
 }

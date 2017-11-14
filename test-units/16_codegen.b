@@ -4,8 +4,8 @@ declblock{
 }
 
 codeblock{
-    b = 2;
-    if b  {
-        print "working";
+    b = -1;
+    if 0 {
+        print "hi";
     }
 }

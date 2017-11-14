@@ -6,7 +6,7 @@ declblock{
 codeblock{
 
     print "Enter current hour";
-    read hour;
+    hour = 20;
 
     if hour > 0 {
         if hour < 6 {

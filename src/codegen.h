@@ -8,6 +8,8 @@ private:
     Value * ret;
     Function * main_function;
     int load_variable;
+    int is_condition;
+    int is_expression;
     string str_;
     map<string, BasicBlock*> goto_labels;
 
@@ -29,6 +31,8 @@ private:
 public:
     CodeGen();
     void dump();
+    Value * get_expression();
+    Value * get_condition();
 
     int visit(AST_program * program);
     int visit(AST_decl_block * decl_block);
