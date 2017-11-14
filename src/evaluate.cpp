@@ -162,7 +162,7 @@ int Evaluate::visit(AST_while_statement * while_statement)
 int Evaluate::visit(AST_goto_statement * goto_statement)
 {
     //cout << "goto_statement : " << goto_statement->label << endl;
-    goto_statement->condition->accept(*this);
+    if(goto_statement->condition) goto_statement->condition->accept(*this);
     return 0;
 }
 

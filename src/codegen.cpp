@@ -63,7 +63,6 @@ int CodeGen::visit(AST_decl_block * decl_block)
         GlobalVariable * gv = new GlobalVariable(*module, arr_type, false, GlobalValue::ExternalLinkage, 0, decl_block->array_ints[i].first);
         gv->setInitializer(ConstantAggregateZero::get(arr_type));
     }
-    //cout << endl;
     return 0;
 }
 
@@ -309,7 +308,33 @@ int CodeGen::visit(AST_while_statement * while_statement)
 
 int CodeGen::visit(AST_goto_statement * goto_statement)
 {
-    goto_statement->condition->accept(*this);
+    Value * cond;
+    if(goto_statement->condition)
+    {
+        goto_statement->condition->accept(*this);
+        cond = ret;
+        if(load_variable){ cond = Builder.CreateLoad(cond); load_variable = 0;}
+    }
+
+    string & label = goto_statement->label;
+
+    Function * funct = Builder.GetInsertBlock()->getParent();
+    BasicBlock * label_BB;
+
+    if(goto_labels.find(label) == goto_labels.end())
+    {
+        label_BB = BasicBlock::Create(getGlobalContext(), label, funct);
+        goto_labels[label] = label_BB;
+    }
+    else
+        label_BB = goto_labels[label];
+
+    BasicBlock * next_BB = BasicBlock::Create(getGlobalContext(), "goto_next", funct);
+
+    if(goto_statement->condition) Builder.CreateCondBr(cond, label_BB, next_BB);
+    else Builder.CreateBr(label_BB);
+    Builder.SetInsertPoint(next_BB);
+
     return 0;
 }
 
@@ -365,7 +390,19 @@ int CodeGen::visit(AST_print_statement * print_statement)
 
 int CodeGen::visit(AST_label_statement * label_statement)
 {
-    //cout << "label_statement : " << label_statement->label << endl;
+    string & label = label_statement->label;
+    Function * funct = Builder.GetInsertBlock()->getParent();
+    BasicBlock * label_BB;
+    if(goto_labels.find(label) == goto_labels.end())
+    {
+        label_BB = BasicBlock::Create(getGlobalContext(), label, funct);
+        goto_labels[label] = label_BB;
+    }
+    else
+        label_BB = goto_labels[label];
+
+    Builder.CreateBr(label_BB);
+    Builder.SetInsertPoint(label_BB);
     return 0;
 }
 

@@ -9,6 +9,7 @@ private:
     Function * main_function;
     int load_variable;
     string str_;
+    map<string, BasicBlock*> goto_labels;
 
     static const int ERROR = 0;
     static const int PLUS = 1;
@@ -28,6 +29,7 @@ private:
 public:
     CodeGen();
     void dump();
+
     int visit(AST_program * program);
     int visit(AST_decl_block * decl_block);
     int visit(AST_code_block * code_block);

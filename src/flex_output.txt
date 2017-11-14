@@ -6,21 +6,5 @@ identifier: c
 codeblock from scanner
 identifier: b
 integer literal: 2
-identifier: c
-integer literal: 3
-identifier: a
-integer literal: 2
 identifier: b
-identifier: a
-integer literal: 4
-identifier: c
-identifier: a
-integer literal: 2
-identifier: a
-integer literal: 4
-identifier: b
-integer literal: 0
-integer literal: 2
-integer literal: 10
-identifier: a
-identifier: b
+string literal: "working"

@@ -165,7 +165,8 @@ AST_goto_statement::AST_goto_statement(AST_expression * condition, string label)
 }
 AST_goto_statement::AST_goto_statement(string label)
 {
-    this->condition = new AST_int_literal(1);
+    //this->condition = new AST_int_literal(1);
+    this->condition = NULL;
     this->label = label;
 }
 int AST_goto_statement::accept(Visitor & v)
