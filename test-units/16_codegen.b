@@ -4,8 +4,9 @@ declblock{
 }
 
 codeblock{
-    b = -1;
-    if 0 {
-        print "hi";
+    b = 1;
+    while b < 10 {
+        print b;
+        b = b + 1;
     }
 }

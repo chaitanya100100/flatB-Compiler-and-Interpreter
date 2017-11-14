@@ -60,7 +60,7 @@ Value * CodeGen::get_condition()
 int CodeGen::visit(AST_program * program)
 {
     FunctionType *ftype = FunctionType::get(Type::getVoidTy(getGlobalContext()), false);
-    main_function = Function::Create(ftype, GlobalValue::InternalLinkage, "main", module);
+    main_function = Function::Create(ftype, GlobalValue::ExternalLinkage, "main", module);
     program->decl_block->accept(*this);
 
     BasicBlock * BB = BasicBlock::Create(getGlobalContext(), "entry", main_function);

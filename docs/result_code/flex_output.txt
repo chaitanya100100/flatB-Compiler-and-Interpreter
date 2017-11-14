@@ -1,15 +1,15 @@
 declblock from scanner
 identifier: arr
-integer literal: 5000005
+integer literal: 1000005
 identifier: N
 identifier: Q
 identifier: queries
-integer literal: 5000005
+integer literal: 1000005
 identifier: p
 identifier: P
 identifier: MOD
 identifier: answers
-integer literal: 5000005
+integer literal: 1000005
 identifier: q
 identifier: i
 identifier: j
@@ -21,9 +21,9 @@ codeblock from scanner
 identifier: MOD
 integer literal: 100003
 identifier: Q
-integer literal: 5000000
+integer literal: 1000000
 identifier: N
-integer literal: 5000000
+integer literal: 1000000
 identifier: P
 integer literal: 37
 identifier: p
@@ -100,3 +100,8 @@ integer literal: 1
 identifier: l
 identifier: m
 integer literal: 1
+identifier: i
+integer literal: 0
+identifier: Q
+identifier: answers
+identifier: i
