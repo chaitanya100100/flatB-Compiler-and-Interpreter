@@ -11,13 +11,13 @@ extern union _NODE_ yylval;
 %%
 
 "declblock"    {
-                    fprintf(flex_output, "declblock from scanner\n");
+                    fprintf(flex_output, "declblock keyword from scanner\n");
                     return DECLBLOCK;
                }
 
 
 "codeblock"    {
-                   fprintf(flex_output, "codeblock from scanner\n");
+                   fprintf(flex_output, "codeblock keyword from scanner\n");
                    return CODEBLOCK;
                }
 

@@ -17,4 +17,4 @@ AST.o: AST.cpp AST.h traverse.cpp traverse.h evaluate.cpp evaluate.h codegen.h c
 
 .PHONY: clean
 clean:
-	-@rm -rf parser.tab.c parser.tab.h lex.yy.c AST.o  bcc 2>/dev/null || true
+	-@rm -rf parser.tab.c parser.tab.h lex.yy.c AST.o bcc flex_output.txt bison_output.txt ir_file bytecode_file 2>/dev/null || true

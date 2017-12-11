@@ -8,12 +8,10 @@ fi
 echo "Compiling..."
 make -j4 # Compile the code
 echo "Producing the output LLVM IR Code"
-./bcc $1 2>llout
+./bcc $1 codegeneration 2> ir_file
 
 echo "Generating Bitecode from IR"
-llvm-as llout -o llbc
+llvm-as ir_file -o bytecode_file
 
 echo "Interpreting Bitecode"
-lli llbc
-
-echo "Done"
+lli bytecode_file

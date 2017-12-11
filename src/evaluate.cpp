@@ -199,6 +199,7 @@ int Evaluate::visit(AST_print_statement * print_statement)
             cout << str.substr(1, str.length()-2) << " ";
         }
     }
+    cout << endl;
     return 0;
 }
 
