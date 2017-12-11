@@ -1,5 +1,5 @@
 # Compiler and Interpreter
-Compiler and Interpreter for a c-like language *flatB* using _flex_ scanner, _bison_ parser and _llvm_ code generator framework
+Compiler and Interpreter for a c-like language `flatB` using `flex` scanner, `bison` parser and `llvm` code generator framework
 
 ## flatB
 - Keywords : `int`, `codeblock`, `declblock`, `print`, `read`, `if`, `else`, `while`, `for`, `goto`
@@ -39,7 +39,7 @@ Compiler and Interpreter for a c-like language *flatB* using _flex_ scanner, _bi
 
 ## Testing
 - ![test-units](test-units/) directory has some codes written in flatB
-- they were used while developing the compiler that's why not all codes are syntactically/semantically correct, they may not work in interpretion and code-generation
+- they were used while developing the compiler hence not all codes are syntactically/semantically correct, they may not work in interpretion and code-generation
 
 ## Compile and Run
 - Compile using `make`
@@ -115,13 +115,13 @@ AST class hierarchy is as follows
 
 
 ### Traverser (![traverse.h](src/traverse.h) / ![traverse.cpp](src/traverse.cpp))
-- implemented using *Visitor design pattern*
+- implemented using `Visitor design pattern`
 
 ### Interpreter (![evaluate.h](src/evaluate.h) / ![evaluate.cpp](src/evaluate.cpp))
-- implemented using *Visitor design pattern*
+- implemented using `Visitor design pattern`
 
 ### Code Generator (![codegen.h](src/codegen.h) / ![codegen.cpp](src/codegen.cpp))
-- implemented using *Visitor design pattern*
+- implemented using `Visitor design pattern`
 
 
 ## Performance

@@ -1,18 +1,25 @@
 program:    decl_block code_block
+
 decl_block:    DECLBLOCK '{' '}'
           |	   DECLBLOCK '{' decl_statement_list '}'
+
 decl_statement_list:   decl_statement_list decl_statement
                    |   decl_statement
+
 decl_statement:    INT decl_variable_list ';'
               |	   ';'
+
 decl_variable_list:    decl_variable_list ',' IDENTIFIER
                   |	   decl_variable_list ',' IDENTIFIER '[' INT_LITERAL ']'
-​			       |    IDENTIFIER
+                  |    IDENTIFIER
                   |    IDENTIFIER '[' INT_LITERAL ']'
+
 code_block:    CODEBLOCK '{' '}'
           |    CODEBLOCK '{' statement_list '}'
+
 statement_block:    '{' '}'
                |	'{' statement_list '}'
+
 statement_list:    statement_list statement
               |	   statement
 
