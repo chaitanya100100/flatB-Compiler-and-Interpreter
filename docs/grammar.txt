@@ -1,0 +1,61 @@
+program:    decl_block code_block
+decl_block:    DECLBLOCK '{' '}'
+          |	   DECLBLOCK '{' decl_statement_list '}'
+decl_statement_list:   decl_statement_list decl_statement
+                   |   decl_statement
+decl_statement:    INT decl_variable_list ';'
+              |	   ';'
+decl_variable_list:    decl_variable_list ',' IDENTIFIER
+                  |	   decl_variable_list ',' IDENTIFIER '[' INT_LITERAL ']'
+​			       |    IDENTIFIER
+                  |    IDENTIFIER '[' INT_LITERAL ']'
+code_block:    CODEBLOCK '{' '}'
+          |    CODEBLOCK '{' statement_list '}'
+statement_block:    '{' '}'
+               |	'{' statement_list '}'
+statement_list:    statement_list statement
+              |	   statement
+
+statement:    expression ';'
+​		|	variable '=' expression ';'
+​		|	statement_block
+​		|	IF expression statement_block
+​		|	IF expression statement_block ELSE statement_block
+​		|	FOR variable '=' expression ',' expression statement_block
+​		|	FOR variable '=' expression ',' expression ',' expression statement_block
+​		|	WHILE expression statement_block
+​		|	GOTO IDENTIFIER ';'
+​		|	GOTO IDENTIFIER IF expression ';'
+​		|	READ read_variable_list ';'
+​		|	PRINT printable_list ';'
+​		|	IDENTIFIER ':'
+​		|	';'
+
+expression:    expression '+' expression
+​		|	expression '-' expression
+​		|	expression '\*' expression
+​		|	expression '/' expression
+​		|	expression '%' expression
+​		|	expression LESS expression
+​		|	expression LESS_OR_EQUAL expression
+​		|	expression GREATER expression
+​		|	expression GREATER_OR_EQUAL expression
+​		|	expression EQUAL expression
+​		|	expression NOT_EQUAL expression
+​		|	expression OR expression
+​		|	expression AND expression
+​		|	'-' expression    %prec UMINUS
+​		|	'(' expression ')'
+​		|	variable
+​		|	INT_LITERAL
+
+variable:    IDENTIFIER
+​		|	IDENTIFIER '[' expression ']'
+
+read_variable_list:    read_variable_list ',' variable
+​				|	variable
+
+printable_list:    printable_list ',' STRING_LITERAL
+​			|	printable_list ',' expression
+​			|	STRING_LITERAL
+​			|	expression

@@ -1,5 +1,5 @@
 # Compiler and Interpreter
-Compiler and Interpreter for a c-like language flatB using flex scanner, bison parser and llvm code generator framework
+Compiler and Interpreter for a c-like language *flatB* using _flex_ scanner, _bison_ parser and _llvm_ code generator framework
 
 ## flatB
 - Keywords : `int`, `codeblock`, `declblock`, `print`, `read`, `if`, `else`, `while`, `for`, `goto`
@@ -20,17 +20,17 @@ Compiler and Interpreter for a c-like language flatB using flex scanner, bison p
   - `for i = a, b {}` is same as `for(i = a, i < b, i++)` in C.
   - `for i = a, x, b {}` is same as `for(i = a, i < b, i+=x)` in C.
 - if-else statement
-  `if expression {}`
-  `if expression {} else {}`
+  - `if expression {}`
+  - `if expression {} else {}`
 - while statment
-  `while expression {}`
+  - `while expression {}`
 - conditional and unconditional goto
-  `goto label`
-  `goto label if expression`
+  - `goto label`
+  - `goto label if expression`
 - print/read
-  `print "blah...blah", val`       // New line at the end of each print
-  `read sum`
-  `read data[i]`
+  - `print "blah...blah", val`       // New line at the end of each print
+  - `read sum`
+  - `read data[i]`
 
 ## Dependencies
 - flex
@@ -38,7 +38,7 @@ Compiler and Interpreter for a c-like language flatB using flex scanner, bison p
 - llvm
 
 ## Testing
-- test-unites directory has some codes written in flatB
+- ![test-units](test-units/) directory has some codes written in flatB
 - they were used while developing the compiler that's why not all codes are syntactically/semantically correct, they may not work in interpretion and code-generation
 
 ## Compile and Run
@@ -59,99 +59,35 @@ Compiler and Interpreter for a c-like language flatB using flex scanner, bison p
 - it makes an abstract syntax tree (AST) from flatB input file and interpret it
 - it supports all flatB features including reading from terminal in case of read statement and printing on terminal in case of print statement (`goto` is not supported because in case of interpretation, forward 'goto' doesn't make sense)
 - it does syntactic checks, wrong syntax will raise an error
-- it doesn't do semantic checks. if `<input_file>` has semantic errors, then output is undefined (mostly it will give segment fault)
+- it doesn't do semantic checks. if `<input_file>` has semantic errors, then output is undefined (mostly it will give segmentation fault)
 
 ### code generation
 - `./bcc <input_file> codegeneration`
 - it makes an abstract syntax tree (AST) from flatB input file and outputs `llvm IR` which can be either interpreted or compiled
-- as of now, it supports all features `except read statement` (reading user input is not included in code generation)
+- as of now, it supports all features except read statement (reading user input is not included in code generation)
 - it does syntactic checks, wrong syntax will raise an error
-- it doesn't do semantic checks. if `<input_file>` has semantic errors, then output is undefined (mostly it will give segment fault)
+- it doesn't do semantic checks. if `<input_file>` has semantic errors, then output is undefined (mostly it will give segmentation fault)
 - `llvm IR` can be stored in a file which can be compiled to form interpretable `llvm bytecode`
   `./bcc <input_file> codegeneration 2> <IR_file>`
   `llvm-as <IR_file> -o <bytecode_file>`
   `lli <bytecode_file>`
- - all of the above commands can be run directly by calling `codegen_interpret.sh` script as
+ - all of the above commands can be run directly by calling ![codegen_interpret.sh](src/codegen_interpret.sh) script as
    `./codegen_interpret.sh <input_file>`
 
 
 
 ## implementation Details
-### Scanner (scanner.l)
+### Scanner (![scanner.l](src/scanner.l))
 - `flex` scanner for scanning tokens
 - tokens are self explanatory in scanner file
 
-### Parser (parser.y)
+### Parser (![parser.y](src/parser.y))
 - `bison` parser
-- language grammer is defined in compiler design document
 - it inheritely does some semantic checks and generates AST
-
-##### Context Free Grammar
-
-program:    decl_block code_block
-decl_block:    DECLBLOCK '{' '}'
-          |	   DECLBLOCK '{' decl_statement_list '}'
-decl_statement_list:   decl_statement_list decl_statement
-                   |   decl_statement
-decl_statement:    INT decl_variable_list ';'
-              |	   ';'
-decl_variable_list:    decl_variable_list ',' IDENTIFIER
-                  |	   decl_variable_list ',' IDENTIFIER '[' INT_LITERAL ']'
-​			       |    IDENTIFIER	   
-                  |    IDENTIFIER '[' INT_LITERAL ']'
-code_block:    CODEBLOCK '{' '}'
-          |    CODEBLOCK '{' statement_list '}'
-statement_block:    '{' '}'
-               |	'{' statement_list '}'
-statement_list:    statement_list statement
-              |	   statement
-
-statement:    expression ';'
-​		|	variable '=' expression ';'
-​		|	statement_block
-​		|	IF expression statement_block
-​		|	IF expression statement_block ELSE statement_block
-​		|	FOR variable '=' expression ',' expression statement_block
-​		|	FOR variable '=' expression ',' expression ',' expression statement_block
-​		|	WHILE expression statement_block
-​		|	GOTO IDENTIFIER ';'
-​		|	GOTO IDENTIFIER IF expression ';'
-​		|	READ read_variable_list ';'
-​		|	PRINT printable_list ';'
-​		|	IDENTIFIER ':'
-​		|	';'
-
-expression:    expression '+' expression
-​		|	expression '-' expression
-​		|	expression '\*' expression
-​		|	expression '/' expression
-​		|	expression '%' expression
-​		|	expression LESS expression
-​		|	expression LESS_OR_EQUAL expression
-​		|	expression GREATER expression
-​		|	expression GREATER_OR_EQUAL expression
-​		|	expression EQUAL expression
-​		|	expression NOT_EQUAL expression
-​		|	expression OR expression
-​		|	expression AND expression
-​		|	'-' expression    %prec UMINUS
-​		|	'(' expression ')'
-​		|	variable
-​		|	INT_LITERAL
-
-variable:    IDENTIFIER
-​		|	IDENTIFIER '[' expression ']'
-
-read_variable_list:    read_variable_list ',' variable
-​				|	variable
-
-printable_list:    printable_list ',' STRING_LITERAL
-​			|	printable_list ',' expression
-​			|	STRING_LITERAL
-​			|	expression
+- context free grammar is defined ![here](docs/grammar.txt)
 
 
-### Abstract Syntax Tree (AST.h / AST.cpp)
+### Abstract Syntax Tree (![AST.h](src/AST.h) / ![AST.cpp](src/AST.cpp))
 AST class hierarchy is as follows
 - AST_node
   - AST_program
@@ -178,71 +114,71 @@ AST class hierarchy is as follows
   - AST_string_literal
 
 
-### Traverser (traverse.h / traverse.cpp)
+### Traverser (![traverse.h](src/traverse.h) / ![traverse.cpp](src/traverse.cpp))
 - implemented using *Visitor design pattern*
 
-### Interpreter (evaluate.h / evaluate.cpp)
+### Interpreter (![evaluate.h](src/evaluate.h) / ![evaluate.cpp](src/evaluate.cpp))
 - implemented using *Visitor design pattern*
 
-### Code Generator (codegen.h / codegen.cpp)
+### Code Generator (![codegen.h](src/codegen.h) / ![codegen.cpp](src/codegen.cpp))
 - implemented using *Visitor design pattern*
 
 
 ## Performance
 
-###Binary Search
+### Binary Search
 - Array of 5,000,000 numbers sorted
 - 5,000,000 Queries
 
 ##### lli interpreter
-real		0m1.201s
-user	0m1.172s
-sys		0m0.024s
+real		0m1.201s  
+user	0m1.172s  
+sys		0m0.024s  
 
 ##### llc static compiler
-real		0m1.181s
-user	0m1.152s
-sys		0m0.028s
+real		0m1.181s  
+user	0m1.152s  
+sys		0m0.028s  
 
 ##### My interpreter
-real		1m16.621s
-user	1m16.124s
-sys		0m0.472s
+real		1m16.621s  
+user	1m16.124s  
+sys		0m0.472s  
 
 
 ### Sieve of Eranthoses
 - Finding primes up to 5,000,000
 
-#####lli interpreter
-real		0m0.286s
-user	0m0.264s
-sys		0m0.020s
+##### lli interpreter
+real		0m0.286s  
+user	0m0.264s  
+sys		0m0.020s  
 
 ##### llc static compiler
-real		0m0.279s
-user	0m0.268s
-sys		0m0.008s
+real		0m0.279s  
+user	0m0.268s  
+sys		0m0.008s  
 
 ##### My interpreter
-real		0m7.556s
-user	0m7.488s
-sys		0m0.056s
+real		0m7.556s  
+user	0m7.488s  
+sys		0m0.056s  
 
 
 ### Bubblesort
 - bubblesort over 20,000 numbers
 
 ##### lli interpreter
-real		0m0.996s
-user	0m0.992s
-sys		0m0.000s
+real		0m0.996s  
+user	0m0.992s  
+sys		0m0.000s  
 
 ##### llc static compiler
-real		0m0.851s
-user	0m0.848s
-sys		0m0.000s
+real		0m0.851s  
+user	0m0.848s  
+sys		0m0.000s  
 
 ##### My Interpreter
-real		2m10.433s
-user	2m10.364s
-sys		0m0.020s
+real		2m10.433s  
+user	2m10.364s  
+sys		0m0.020s  
