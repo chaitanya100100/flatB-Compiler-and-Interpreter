@@ -1,7 +1,7 @@
-# Compiler and Interpreter
+# flatB Compiler and Interpreter
 Compiler and Interpreter for a c-like language `flatB` using `flex` scanner, `bison` parser and `llvm` code generator framework
 
-## flatB
+## flatB Description
 - Keywords : `int`, `codeblock`, `declblock`, `print`, `read`, `if`, `else`, `while`, `for`, `goto`
 - Data Types : Inegers and Array of Integers.
   `int data, array[100];`
